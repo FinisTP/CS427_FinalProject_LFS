@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Linq;
+using TMPro;
 public class GameplayManager : MonoBehaviourPunCallbacks
 {
     [Header("Status")]
@@ -14,8 +15,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     public PlayerController[] players;
     private int playersInGame;
     private List<int> pickedSpawnIndex;
-    [Header("Reference")]
-    public GameObject imageTarget;
+    public TMP_Text MicState;
+    //[Header("Reference")]
+    //public GameObject imageTarget;
     //instance
     public static GameplayManager instance;
     private void Awake()
@@ -27,10 +29,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         pickedSpawnIndex = new List<int>();
         players = new PlayerController[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
-        DefaultObserverEventHandler.isTracking = false;
+        // DefaultObserverEventHandler.isTracking = false;
     }
     private void Update()
     {
+        /*
         Debug.Log("is tracking " + DefaultObserverEventHandler.isTracking);
         foreach (GameObject gameObj in GameObject.FindObjectsOfType(typeof(GameObject)))
         {
@@ -43,6 +46,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
             imageTarget.transform.GetChild(i).gameObject.SetActive(DefaultObserverEventHandler.isTracking);
         }
+        */
     }
     [PunRPC]
     void ImInGame()
@@ -53,6 +57,13 @@ public class GameplayManager : MonoBehaviourPunCallbacks
             SpawnPlayer();
         }
     }
+
+    public void ToggleMic(bool state)
+    {
+        if (state) MicState.text = "Is enabling voice transmission";
+        else MicState.text = "Is muting";
+    }
+
     void SpawnPlayer()
     {
         int rand = Random.Range(0, spawnPoints.Length);

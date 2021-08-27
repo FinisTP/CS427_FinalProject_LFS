@@ -16,7 +16,7 @@ MonoBehaviour:
     AppIdRealtime: 5c848bcf-368d-482d-912f-6878fe6f0b69
     AppIdFusion: 
     AppIdChat: 
-    AppIdVoice: 
+    AppIdVoice: 9a8f1720-383a-4696-a9ed-0b5f600362d4
     AppVersion: 
     UseNameServer: 1
     FixedRegion: 
@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: 
+  DevRegion: asia
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -43,6 +43,9 @@ MonoBehaviour:
   - UpdateLobbyUI
   - ImInGame
   - Initialize
+  - CantHearYou
+  - ChangeColour
+  - HeresWhy
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
-  DevRegionSetOnce: 0
+  ShowSettings: 1
+  DevRegionSetOnce: 1
