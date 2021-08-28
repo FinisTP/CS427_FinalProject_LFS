@@ -190,11 +190,12 @@ MonoBehaviour:
   walkSpeed: 3
   jumpForce: 300
   smoothTime: 0.15
-  turnSmoothTime: 0
+  turnSmoothTime: 1
   groundDetectionPos: {fileID: 8816282640342777824}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  ShootDelay: 2
   id: 0
   rig: {fileID: 4640949246324645494}
   playerNickName: {fileID: 5389209912915615446}
@@ -468,7 +469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cea547d1f295ab46bfc5017cbf535ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PushButton: 109
   VoiceRecorder: {fileID: 3452686137351456878}
 --- !u!1 &5309328876128778396
 GameObject:

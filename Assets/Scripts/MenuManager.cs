@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     [Header("Menus")]
     public GameObject mainMenu;
     public GameObject lobbyMenu;
+    public string SceneToLoad;
     [Header("Main Menu")]
     public Button createRoomBtn;
     public Button joinRoomBtn;
@@ -87,6 +88,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
     }
     public void OnStartGameBtn()
     {
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "MultiplayerTest");
+        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
     }
 }

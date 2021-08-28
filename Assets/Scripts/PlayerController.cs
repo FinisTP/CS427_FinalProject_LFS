@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime, turnSmoothTime;
     [SerializeField] Transform groundDetectionPos;
     [SerializeField] LayerMask groundLayer;
+    [SerializeField] float ShootDelay;
 
+    float shootTime;
     float verticalLookRotation;
     float turnSmoothVelocity;
     bool grounded;
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         id = player.ActorNumber;
         speed = 0.2f;
         GameplayManager.instance.players[id - 1] = this;
+        
         if (!photonView.IsMine)
         {
             rig.isKinematic = true;
@@ -43,7 +46,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private void Start()
     {
         speed = 0.2f;
+        shootTime = 0f;
         // rig.isKinematic = true;
+        GameplayManager.instance.LocalPlayer = this;
         playerNickName.text = photonPlayer.NickName;
 
         if (!photonView.IsMine)
@@ -56,9 +61,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (photonPlayer.IsLocal)
         {
+            
             Movements();
-            if (Input.GetKey(KeyCode.LeftControl) || CrossPlatformInputManager.GetButton("Shoot"))
+            if (shootTime >= ShootDelay && (Input.GetKey(KeyCode.LeftControl) || CrossPlatformInputManager.GetButton("Shoot")))
             {
+                shootTime -= ShootDelay;
                 photonView.RPC("Fire", RpcTarget.All);
             }
         }
@@ -66,7 +73,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void Look()
     {
-        transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity);
+        // rig.AddTorque();
+        Vector3 rotAxis = Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity;
+        rotAxis.x = rotAxis.z = 0;
+        transform.Rotate(rotAxis);
         verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
         verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
 
@@ -86,7 +96,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void Move()
     {
-        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        float horizontal = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+        float vertical = CrossPlatformInputManager.GetAxisRaw("Vertical");
+        float hori = Input.GetAxis("Horizontal");
+        float verti = Input.GetAxis("Vertical");
+
+        Vector3 moveDir = new Vector3(hori + horizontal, 0, verti + vertical).normalized;
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed)
             , ref smoothMovementVelocity, smoothTime);
     }
@@ -106,6 +121,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
+        shootTime += Time.fixedDeltaTime;
         rig.MovePosition(rig.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
     }
 
@@ -179,8 +195,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         bullet.name = photonPlayer.NickName;
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         bullet.transform.localPosition = transform.position;
-        bullet.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        rb.AddForce(this.transform.forward * 300f);
+        // bullet.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        rb.AddForce(this.transform.forward * 1000f);
         Destroy(bullet, 1);
     }
 

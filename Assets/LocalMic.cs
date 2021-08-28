@@ -5,10 +5,11 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
 using Photon.Voice.PUN;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class LocalMic : MonoBehaviour
 {
-    public KeyCode PushButton = KeyCode.M;
+    // public KeyCode PushButton = KeyCode.M;
     public Recorder VoiceRecorder;
     private PhotonView view;
     
@@ -21,7 +22,7 @@ public class LocalMic : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(PushButton))
+        if (Input.GetKeyDown(KeyCode.M) || CrossPlatformInputManager.GetButtonDown("Mic"))
         {
             if (view.IsMine)
             {

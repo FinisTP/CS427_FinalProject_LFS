@@ -5,10 +5,12 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 public class GameplayManager : MonoBehaviourPunCallbacks
 {
     [Header("Status")]
     public bool gameEnded = false;
+
     [Header("Players")]
     public string playerPrefabLocation;
     public Transform[] spawnPoints;
@@ -16,8 +18,16 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private int playersInGame;
     private List<int> pickedSpawnIndex;
     public TMP_Text MicState;
-    //[Header("Reference")]
-    //public GameObject imageTarget;
+    public PlayerController LocalPlayer;
+    
+    [Header("Reference")]
+    public GameObject imageTarget;
+
+    [Header("Microphone")]
+    public Image MicImage;
+    public Sprite MuteIcon;
+    public Sprite UnmuteIcon;
+
     //instance
     public static GameplayManager instance;
     private void Awake()
@@ -29,13 +39,13 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         pickedSpawnIndex = new List<int>();
         players = new PlayerController[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
-        // DefaultObserverEventHandler.isTracking = false;
+        DefaultObserverEventHandler.isTracking = false;
     }
     private void Update()
     {
-        /*
+        
         Debug.Log("is tracking " + DefaultObserverEventHandler.isTracking);
-        foreach (GameObject gameObj in GameObject.FindObjectsOfType(typeof(GameObject)))
+        foreach (GameObject gameObj in GameObject.FindGameObjectsWithTag("Player"))
         {
             if (gameObj.name == "Player(Clone)")
 {
@@ -46,7 +56,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
             imageTarget.transform.GetChild(i).gameObject.SetActive(DefaultObserverEventHandler.isTracking);
         }
-        */
+        
     }
     [PunRPC]
     void ImInGame()
@@ -60,8 +70,16 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     public void ToggleMic(bool state)
     {
-        if (state) MicState.text = "Is enabling voice transmission";
-        else MicState.text = "Is muting";
+        if (state)
+        {
+            MicState.text = "Is enabling voice transmission";
+            MicImage.sprite = UnmuteIcon;
+        }
+        else
+        {
+            MicState.text = "Is muting";
+            MicImage.sprite = MuteIcon;
+        }
     }
 
     void SpawnPlayer()
