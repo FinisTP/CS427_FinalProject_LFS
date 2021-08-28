@@ -8,6 +8,7 @@ using TMPro;
 public class MenuManager : MonoBehaviourPunCallbacks
 {
     [Header("Menus")]
+    public GameObject currentMenu;
     public GameObject mainMenu;
     public GameObject lobbyMenu;
     public string SceneToLoad;
@@ -28,11 +29,11 @@ public class MenuManager : MonoBehaviourPunCallbacks
         createRoomBtn.interactable = true;
         joinRoomBtn.interactable = true;
     }
-    void SetMenu(GameObject menu)
+    public void SetMenu(GameObject menu)
     {
-        mainMenu.SetActive(false);
-        lobbyMenu.SetActive(false);
+        currentMenu.SetActive(false);
         menu.SetActive(true);
+        currentMenu = menu;
     }
     public void OnCreateRoomBtn(TMP_Text roomNameInput)
     {
