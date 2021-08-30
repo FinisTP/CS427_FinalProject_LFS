@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 {
     [Header("Player Specs")]
     [SerializeField] GameObject cameraHolder;
+    [SerializeField] GameObject camera;
     [SerializeField] float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime, turnSmoothTime;
     [SerializeField] Transform groundDetectionPos;
     [SerializeField] LayerMask groundLayer;
@@ -47,8 +48,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         speed = 0.2f;
         shootTime = 0f;
-        // rig.isKinematic = true;
-        GameplayManager.instance.LocalPlayer = this;
+        rig.isKinematic = true;
+        // GameplayManager.instance.LocalPlayer = this;
+        camera = GameObject.Find("ARCamera");
         playerNickName.text = photonPlayer.NickName;
 
         if (!photonView.IsMine)
@@ -61,7 +63,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (photonPlayer.IsLocal)
         {
-            
+            transform.position = camera.transform.position;
+            transform.rotation = camera.transform.rotation;
             Movements();
             if (shootTime >= ShootDelay && (Input.GetKey(KeyCode.LeftControl) || CrossPlatformInputManager.GetButton("Shoot")))
             {
@@ -127,12 +130,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     void Movements()
     {
+        /*
         DetectGround();
         Look();
         Move();
         Jump();
-
-        /*
+        */
         float horizontal = CrossPlatformInputManager.GetAxisRaw("Horizontal");
         float vertical = CrossPlatformInputManager.GetAxisRaw("Vertical");
         float hori = Input.GetAxis("Horizontal");
@@ -185,7 +188,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             transform.localEulerAngles = new Vector3(0, 180, 0);
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
-        */
+       
     }
 
     [PunRPC]
