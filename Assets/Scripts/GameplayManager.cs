@@ -14,19 +14,12 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     [Header("Players")]
     public string playerPrefabLocation;
     public Transform[] spawnPoints;
-    public PlayerController[] players;
+    public ThirdPersonMovement[] players;
     private int playersInGame;
     private List<int> pickedSpawnIndex;
-    public TMP_Text MicState;
-    public PlayerController LocalPlayer;
+    // public TMP_Text MicState;
+   
     
-    [Header("Reference")]
-    public GameObject imageTarget;
-
-    [Header("Microphone")]
-    public Image MicImage;
-    public Sprite MuteIcon;
-    public Sprite UnmuteIcon;
 
     //instance
     public static GameplayManager instance;
@@ -37,13 +30,13 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         pickedSpawnIndex = new List<int>();
-        players = new PlayerController[PhotonNetwork.PlayerList.Length];
+        players = new ThirdPersonMovement[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
         DefaultObserverEventHandler.isTracking = false;
     }
     private void Update()
     {
-        
+        /*
         Debug.Log("is tracking " + DefaultObserverEventHandler.isTracking);
         foreach (GameObject gameObj in GameObject.FindGameObjectsWithTag("Player"))
         {
@@ -56,6 +49,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
             imageTarget.transform.GetChild(i).gameObject.SetActive(DefaultObserverEventHandler.isTracking);
         }
+        */
         
     }
     [PunRPC]
@@ -68,19 +62,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ToggleMic(bool state)
-    {
-        if (state)
-        {
-            MicState.text = "Is enabling voice transmission";
-            MicImage.sprite = UnmuteIcon;
-        }
-        else
-        {
-            MicState.text = "Is muting";
-            MicImage.sprite = MuteIcon;
-        }
-    }
+    
 
     void SpawnPlayer()
     {
@@ -95,11 +77,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         PlayerController playerScript = playerObject.GetComponent<PlayerController>();
         playerScript.photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
     }
-    public PlayerController GetPlayer(int playerID)
+    public ThirdPersonMovement GetPlayer(int playerID)
     {
         return players.First(x => x.id == playerID);
     }
-    public PlayerController GetPlayer(GameObject playerObj)
+    public ThirdPersonMovement GetPlayer(GameObject playerObj)
     {
         return players.First(x => x.gameObject == playerObj);
     }

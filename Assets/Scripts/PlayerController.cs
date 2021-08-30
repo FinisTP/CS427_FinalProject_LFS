@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         photonPlayer = player;
         id = player.ActorNumber;
         speed = 0.2f;
-        GameplayManager.instance.players[id - 1] = this;
+        // GameplayManager.instance.players[id - 1] = this;
         
         if (!photonView.IsMine)
         {
