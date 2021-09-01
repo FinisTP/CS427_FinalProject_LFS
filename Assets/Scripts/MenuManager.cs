@@ -102,6 +102,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
         {
             LobbyManager.instance.CanStartGame = false;
         }
+        PhotonNetwork.LoadLevel("Lobby");
+        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget., "Lobby");
     }
     public void OnLeaveLobbyBtn()
     {
