@@ -22,12 +22,12 @@ public class LocalMic : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M) || CrossPlatformInputManager.GetButtonDown("Mic"))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             if (view.IsMine)
             {
                 VoiceRecorder.TransmitEnabled = !VoiceRecorder.TransmitEnabled;
-                GameplayManager.instance.ToggleMic(VoiceRecorder.TransmitEnabled);
+                GameplayManager.instance.uiManager.ToggleMic(VoiceRecorder.TransmitEnabled);
             }
         }
     }

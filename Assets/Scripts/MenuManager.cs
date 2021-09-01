@@ -5,24 +5,30 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using System;
+
 public class MenuManager : MonoBehaviourPunCallbacks
 {
+
     [Header("Menus")]
     public GameObject currentMenu;
     public GameObject mainMenu;
     public GameObject lobbyMenu;
     public string SceneToLoad;
+
     [Header("Main Menu")]
     public Button createRoomBtn;
     public Button joinRoomBtn;
-    [Header("Lobby Menu")]
-    public TMP_Text roomName;
-    public TMP_Text playerList;
-    public Button startGameBtn;
+    public TMP_Text Username;
+
+    public Action OnJoinRoomSuccess;
+
     private void Start()
     {
         createRoomBtn.interactable = false;
         joinRoomBtn.interactable = false;
+
+        OnJoinRoomSuccess += OnJoinedRoom;
     }
     public override void OnConnectedToMaster()
     {
@@ -37,21 +43,36 @@ public class MenuManager : MonoBehaviourPunCallbacks
     }
     public void OnCreateRoomBtn(TMP_Text roomNameInput)
     {
-        NetworkManager.instance.CreateRoom(roomNameInput.text);
-        roomName.text = roomNameInput.text;
+        bool res = NetworkManager.instance.CreateRoom(roomNameInput.text);
+        NetworkManager.instance.roomName = roomNameInput.text;
+
+        if (res) ModalWindowPanel.Instance.ShowModal("Confirm room creation", null,
+            "Do you want to create and join the room " + roomNameInput.text + "?", "Yes", "No", OnJoinRoomSuccess);
+
+        else ModalWindowPanel.Instance.ShowModal("Room creation failed", null,
+            "The room with the name " + roomNameInput.text + " is already available. Please retry using a different name.", "Okay");
     }
+
     public void OnJoinRoomBtn(TMP_Text roomNameInput)
     {
-        NetworkManager.instance.JoinRoom(roomNameInput.text);
-        roomName.text = roomNameInput.text;
+        bool res = NetworkManager.instance.JoinRoom(roomNameInput.text);
+        NetworkManager.instance.roomName = roomNameInput.text;
+
+        if (res) ModalWindowPanel.Instance.ShowModal("Confirm room join", null,
+            "Do you want to join the room " + roomNameInput.text + "?", "Yes", "No", OnJoinRoomSuccess);
+
+        else ModalWindowPanel.Instance.ShowModal("Room creation failed", null,
+            "The room with the name " + roomNameInput.text + " is not available. Please retry using a valid name.", "Okay");
     }
     public void OnPlayerNameUpdate(TMP_Text playerNameInput)
     {
         PhotonNetwork.NickName = playerNameInput.text;
+        Username.text = "Player: " + playerNameInput.text;
     }
     public override void OnJoinedRoom()
     {
-        SetMenu(lobbyMenu);
+        // SetMenu(lobbyMenu);
+        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
         photonView.RPC("UpdateLobbyUI", RpcTarget.All);
     }
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -61,25 +82,25 @@ public class MenuManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateLobbyUI()
     {
-        playerList.text = "";
+        LobbyManager.instance.PlayerList = "";
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             if (player.IsMasterClient)
             {
-                playerList.text += player.NickName + " (Host) \n";
+                LobbyManager.instance.PlayerList += player.NickName + " (Host) \n";
             }
             else
             {
-                playerList.text += player.NickName + "\n";
+                LobbyManager.instance.PlayerList += player.NickName + " \n";
             }
         }
         if (PhotonNetwork.IsMasterClient)
         {
-            startGameBtn.interactable = true;
+            LobbyManager.instance.CanStartGame = true;
         }
         else
         {
-            startGameBtn.interactable = false;
+            LobbyManager.instance.CanStartGame = false;
         }
     }
     public void OnLeaveLobbyBtn()
@@ -89,6 +110,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
     }
     public void OnStartGameBtn()
     {
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
+        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
     }
 }

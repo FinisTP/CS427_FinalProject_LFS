@@ -16,7 +16,10 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     public float JumpSpeed = 10f;
     public Transform GroundCheckPos;
     public LayerMask GroundMask;
+    public float SprintSpeed = 12f;
+    public float CrouchSpeed = 3f;
 
+    private float currentSpeed;
     private float turnSmoothVelocity;
     private Vector3 moveDirection;
     private float velocityY;
@@ -38,20 +41,34 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
         if (photonView.IsMine)
         {
-            GameObject.FindObjectOfType<CinemachineFreeLook>().Follow = transform;
-            GameObject.FindObjectOfType<CinemachineFreeLook>().LookAt = transform;
+            
         }
+        if (photonPlayer.IsLocal)
+        {
+            Cam = Camera.main.transform;
+            CinemachineFreeLook cine = GameObject.FindObjectOfType<CinemachineFreeLook>();
+            cine.Follow = transform;
+            cine.LookAt = transform;
+        }
+    }
+
+    private void Start()
+    {
+        currentSpeed = Speed;
     }
 
     private void Update()
     {
         //isGrounded = Physics.OverlapSphere(GroundCheckPos.position, 0.05f, GroundMask).Length > 0;
         if (!photonPlayer.IsLocal) return;
+        if (Input.GetKey(KeyCode.LeftShift)) currentSpeed = SprintSpeed;
+        else if (Input.GetKey(KeyCode.LeftControl)) currentSpeed = CrouchSpeed;
+        else currentSpeed = Speed;
 
         Move();
         Jump();
 
-        Controller.Move((moveDirection.normalized * Speed + velocityY * Vector3.up) * Time.deltaTime);
+        Controller.Move((moveDirection.normalized * currentSpeed + velocityY * Vector3.up) * Time.deltaTime);
     }
 
     private void Move()

@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 53698e1631849cf4fa534bd02dacca8d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Metal Lord
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 21bf45c4ef9fdd9468de7f89c82f7c00, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

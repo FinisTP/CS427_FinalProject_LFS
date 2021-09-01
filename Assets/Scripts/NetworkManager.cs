@@ -5,6 +5,7 @@ using Photon.Pun;
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager instance;
+    public string roomName;
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -21,20 +22,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
     }
-    public void CreateRoom(string roomName)
+    public bool CreateRoom(string roomName)
     {
-        PhotonNetwork.CreateRoom(roomName);
+        return PhotonNetwork.CreateRoom(roomName);
     }
-    public void JoinRoom(string roomName)
+    public bool JoinRoom(string roomName)
     {
         if (PhotonNetwork.PlayerList.Length <= 4)
         {
-            PhotonNetwork.JoinRoom(roomName);
+            return PhotonNetwork.JoinRoom(roomName);
         }
+        return false;
     }
     [PunRPC]
     public void ChangeScene(string sceneName)
     {
         PhotonNetwork.LoadLevel(sceneName);
+    }
+
+    public void QuitGame()
+    {
+        PhotonNetwork.Disconnect();
+        Application.Quit();
     }
 }

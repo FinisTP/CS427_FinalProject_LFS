@@ -11,6 +11,8 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     [Header("Status")]
     public bool gameEnded = false;
 
+    public UIManager uiManager;
+
     [Header("Players")]
     public string playerPrefabLocation;
     public Transform[] spawnPoints;
@@ -18,8 +20,8 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private int playersInGame;
     private List<int> pickedSpawnIndex;
     // public TMP_Text MicState;
-   
-    
+    public List<string> PlayerPrefabs;
+
 
     //instance
     public static GameplayManager instance;
@@ -33,6 +35,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         players = new ThirdPersonMovement[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.AllBuffered);
         DefaultObserverEventHandler.isTracking = false;
+        
+        
+        
     }
     private void Update()
     {
@@ -50,7 +55,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
             imageTarget.transform.GetChild(i).gameObject.SetActive(DefaultObserverEventHandler.isTracking);
         }
         */
-        
+
     }
     [PunRPC]
     void ImInGame()
@@ -62,20 +67,20 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         }
     }
 
-    
-
     void SpawnPlayer()
     {
         int rand = Random.Range(0, spawnPoints.Length);
+        // int rand2 = Random.Range(0, PlayerPrefabs.Length);
         while (pickedSpawnIndex.Contains(rand))
         {
             rand = Random.Range(0, spawnPoints.Length);
         }
         pickedSpawnIndex.Add(rand);
-        GameObject playerObject = PhotonNetwork.Instantiate(playerPrefabLocation, spawnPoints[rand].position, Quaternion.identity);
+        GameObject playerObject = PhotonNetwork.Instantiate(PlayerPrefabs[rand], spawnPoints[rand].position, Quaternion.identity);
         //intialize the player
-        PlayerController playerScript = playerObject.GetComponent<PlayerController>();
+        ThirdPersonMovement playerScript = playerObject.GetComponent<ThirdPersonMovement>();
         playerScript.photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
+        
     }
     public ThirdPersonMovement GetPlayer(int playerID)
     {
@@ -85,4 +90,10 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     {
         return players.First(x => x.gameObject == playerObj);
     }
+
+    public void BackToLobby()
+    {
+        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Lobby");
+    }
+
 }

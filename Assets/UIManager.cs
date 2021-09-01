@@ -27,12 +27,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdatePlayerList(string[] playerNames)
+    public void UpdatePlayerList()
     {
-        PlayerList.text = "";
-        foreach (string name in playerNames)
-        {
-
-        }
+        PlayerList.text = LobbyManager.instance.PlayerList;
     }
 }
