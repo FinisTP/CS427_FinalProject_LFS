@@ -24,11 +24,16 @@ public class LocalMic : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            if (view.IsMine)
-            {
-                VoiceRecorder.TransmitEnabled = !VoiceRecorder.TransmitEnabled;
-                GameplayManager.instance.uiManager.ToggleMic(VoiceRecorder.TransmitEnabled);
-            }
+            ToggleMic();
         }
+    }
+
+    public bool ToggleMic()
+    {
+        if (view.IsMine)
+        {
+            VoiceRecorder.TransmitEnabled = !VoiceRecorder.TransmitEnabled;
+        }
+        return VoiceRecorder.TransmitEnabled;
     }
 }

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager instance;
@@ -17,6 +19,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
     private void Start()
     {
@@ -24,7 +27,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public bool CreateRoom(string roomName)
     {
-        return PhotonNetwork.CreateRoom(roomName);
+        return PhotonNetwork.CreateRoom(roomName, new RoomOptions());
     }
     public bool JoinRoom(string roomName)
     {
@@ -45,4 +48,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Disconnect();
         Application.Quit();
     }
+
+    public override void OnCreatedRoom()
+    {
+        // base.OnCreatedRoom();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        // base.OnJoinedRoom();
+    }
+
+
+
 }

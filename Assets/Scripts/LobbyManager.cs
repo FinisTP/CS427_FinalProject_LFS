@@ -16,4 +16,36 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         instance = this;
     }
+
+    public void UpdateLobby()
+    {
+        
+        photonView.RPC("UpdateLobbyUI", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void UpdateLobbyUI()
+    {
+        PlayerList = "";
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.IsMasterClient)
+            {
+                PlayerList += player.NickName + " (Host) \n";
+            }
+            else
+            {
+                PlayerList += player.NickName + " \n";
+            }
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CanStartGame = true;
+        }
+        else
+        {
+            CanStartGame = false;
+        }
+        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget., "Lobby");
+    }
 }

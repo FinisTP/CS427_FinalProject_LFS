@@ -28,7 +28,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         createRoomBtn.interactable = false;
         joinRoomBtn.interactable = false;
 
-        OnJoinRoomSuccess += OnJoinedRoom;
+        OnJoinRoomSuccess += OnJoinedRoomSuccess;
     }
     public override void OnConnectedToMaster()
     {
@@ -45,7 +45,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         bool res = NetworkManager.instance.CreateRoom(roomNameInput.text);
         NetworkManager.instance.roomName = roomNameInput.text;
-
+        
         if (res) ModalWindowPanel.Instance.ShowModal("Confirm room creation", null,
             "Do you want to create and join the room " + roomNameInput.text + "?", "Yes", "No", OnJoinRoomSuccess);
 
@@ -58,53 +58,51 @@ public class MenuManager : MonoBehaviourPunCallbacks
         bool res = NetworkManager.instance.JoinRoom(roomNameInput.text);
         NetworkManager.instance.roomName = roomNameInput.text;
 
-        if (res) ModalWindowPanel.Instance.ShowModal("Confirm room join", null,
-            "Do you want to join the room " + roomNameInput.text + "?", "Yes", "No", OnJoinRoomSuccess);
+        /*
 
-        else ModalWindowPanel.Instance.ShowModal("Room creation failed", null,
+        if (res) ModalWindowPanel.Instance.ShowModal("Confirm room join", null,
+             "Do you want to join the room " + roomNameInput.text + "?", "Yes", "No", OnJoinRoomSuccess);
+
+        else 
+            ModalWindowPanel.Instance.ShowModal("Room join failed", null,
             "The room with the name " + roomNameInput.text + " is not available. Please retry using a valid name.", "Okay");
+        */
     }
     public void OnPlayerNameUpdate(TMP_Text playerNameInput)
     {
         PhotonNetwork.NickName = playerNameInput.text;
         Username.text = "Player: " + playerNameInput.text;
     }
-    public override void OnJoinedRoom()
+    public void OnJoinedRoomSuccess()
     {
         // SetMenu(lobbyMenu);
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
-        photonView.RPC("UpdateLobbyUI", RpcTarget.All);
+        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, SceneToLoad);
+        StartCoroutine(JoinRoom());
     }
+
+    public override void OnCreatedRoom()
+    {
+        // PhotonNetwork.LoadLevel("Lobby");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        LobbyManager.instance.UpdateLobby();
+    }
+
+    IEnumerator JoinRoom()
+    {
+        LobbyManager.instance.UpdateLobby();
+        yield return new WaitForSeconds(1f);
+        PhotonNetwork.LoadLevel("Lobby");
+        yield return null;
+    }
+
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UpdateLobbyUI();
+        LobbyManager.instance.UpdateLobby();
     }
-    [PunRPC]
-    public void UpdateLobbyUI()
-    {
-        LobbyManager.instance.PlayerList = "";
-        foreach (Player player in PhotonNetwork.PlayerList)
-        {
-            if (player.IsMasterClient)
-            {
-                LobbyManager.instance.PlayerList += player.NickName + " (Host) \n";
-            }
-            else
-            {
-                LobbyManager.instance.PlayerList += player.NickName + " \n";
-            }
-        }
-        if (PhotonNetwork.IsMasterClient)
-        {
-            LobbyManager.instance.CanStartGame = true;
-        }
-        else
-        {
-            LobbyManager.instance.CanStartGame = false;
-        }
-        PhotonNetwork.LoadLevel("Lobby");
-        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget., "Lobby");
-    }
+    
     public void OnLeaveLobbyBtn()
     {
         PhotonNetwork.LeaveRoom();
