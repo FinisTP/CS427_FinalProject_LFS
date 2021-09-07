@@ -27,7 +27,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     public bool CreateRoom(string roomName)
     {
-        return PhotonNetwork.CreateRoom(roomName, new RoomOptions());
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 4;
+        return PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
     public bool JoinRoom(string roomName)
     {
@@ -49,15 +52,37 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Application.Quit();
     }
 
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        ModalWindowPanel.Instance.ShowModal("Failed to join the room", null, message, "Okay");
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        ModalWindowPanel.Instance.ShowModal("Room creation failed", null, message, "Okay");
+    }
+
     public override void OnCreatedRoom()
     {
-        // base.OnCreatedRoom();
+        base.OnCreatedRoom();
+        LobbyManager.instance.UpdateLobby();
+        PhotonNetwork.LoadLevel("Lobby");
     }
 
     public override void OnJoinedRoom()
     {
-        // base.OnJoinedRoom();
+        base.OnJoinedRoom();
+        LobbyManager.instance.UpdateLobby();
     }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        LobbyManager.instance.UpdateLobby();
+    }
+
 
 
 

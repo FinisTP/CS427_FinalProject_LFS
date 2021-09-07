@@ -21,17 +21,17 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     [Header("Status")]
     public bool gameEnded = false;
     public UIManager uiManager;
-    public MatchPhase CurrentMatchPhase;
+    public MatchPhase CurrentMatchPhase = MatchPhase.Idle;
     public float HideTime = 60f;
     public float SeekTime = 300f;
 
     [Header("Players")]
     public string playerPrefabLocation;
     public Transform[] spawnPoints;
-    // public static List<ThirdPersonMovement> players;
-    public ThirdPersonMovement[] players;
+    public List<ThirdPersonMovement> PlayerList = new List<ThirdPersonMovement>();
+    // public ThirdPersonMovement[] players;
     private int playersInGame;
-    private List<int> pickedSpawnIndex;
+    private List<int> pickedSpawnIndex = new List<int>();
     // public TMP_Text MicState;
     public List<string> PlayerPrefabs;
 
@@ -47,48 +47,20 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     private void OnLevelWasLoaded(int level)
     {
-        if (level == SceneManager.GetSceneByName("Lobby").buildIndex)
-        {
-            SoundPlayer.PlayBGM(SoundPlayer.GetTrackFromName("Lobby"));
-        }
-        else if (level == SceneManager.GetSceneByName("Level1").buildIndex)
-        {
-            SoundPlayer.StopAllTrack();
-        }
+
     }
 
     private void Awake()
     {
         instance = this;
         DontDestroyOnLoad(this);
-        print("Manager called!");
     }
     private void Start()
     {
-        // if (!photonView.IsMine) return;
-        SoundPlayer.PlayBGM(SoundPlayer.GetTrackFromName("Lobby"));
-        pickedSpawnIndex = new List<int>();
-        players = new ThirdPersonMovement[4];
-        // print(PhotonNetwork.PlayerList.Length);
-        
         ImInGame();
-        DefaultObserverEventHandler.isTracking = false;
-        // photonView.RPC("ImInGame", RpcTarget.All);
-        CurrentMatchPhase = MatchPhase.Idle;
         uiManager.UpdatePlayerList();
         currentTime = 0;
-
     }
-
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        // photonView.RPC("ImInGame", RpcTarget.All, newPlayer);
-        // base.OnPlayerEnteredRoom(newPlayer);
-        LobbyManager.instance.UpdateLobby();
-        uiManager.UpdatePlayerList();
-
-    }
-
 
     private void Update()
     {
@@ -100,45 +72,50 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
 
         }
-
     }
     [PunRPC]
     void StartMatch()
     {
+        // Selecting random role in the master client side, then pass them on to all other players
         CurrentMatchPhase = MatchPhase.Hide;
-        int seekerId = Random.Range(0, players.Length);
-        while (players[seekerId] == null) seekerId = Random.Range(0, players.Length);
-        for (int i = 0; i < players.Length; ++i)
+        int seekerId = Random.Range(0, PlayerList.Count);
+        while (PlayerList[seekerId] == null) seekerId = Random.Range(0, PlayerList.Count);
+        for (int i = 0; i < PlayerList.Count; ++i)
         {
-            if (players[i] == null) continue;
+            if (PlayerList[i] == null) continue;
             if (i == seekerId)
             {
-                players[i].CurrentRole = Role.Seeker;
-                players[i].GrantSeekerBuff();
+                PlayerList[i].CurrentRole = Role.Seeker;
+                PlayerList[i].GrantSeekerBuff();
             }
-            else players[i].CurrentRole = Role.Hider;
-        }
-        foreach (ThirdPersonMovement tpm in players)
-        {
-            if (tpm != null)
+            else PlayerList[i].CurrentRole = Role.Hider;
+
+            if (!PlayerList[i].photonPlayer.CustomProperties.ContainsKey("Role"))
             {
-                tpm.transform.position = StartPosition.position;
-                tpm.StartPhase();
+                PlayerList[i].photonPlayer.CustomProperties.Add("Role", PlayerList[i].CurrentRole);
             }
-            
+            else PlayerList[i].photonPlayer.CustomProperties["Role"] = PlayerList[i].CurrentRole;
         }
+        NetworkHelper.SetRoomProperty("Time", currentTime);
         StartCoroutine(HidePhase());
+        photonView.RPC("MatchInformation", RpcTarget.All);
     }
 
-    
-
-    public ThirdPersonMovement GetLocalPlayer()
+    [PunRPC]
+    void MatchInformation()
     {
-        foreach (ThirdPersonMovement tpm in players)
+        ThirdPersonMovement.LocalPlayerInstance.CurrentRole = (Role)ThirdPersonMovement.LocalPlayerInstance.photonPlayer.CustomProperties["Role"];
+        if (ThirdPersonMovement.LocalPlayerInstance.CurrentRole == Role.Hider)
         {
-            if (tpm != null && tpm.photonPlayer.IsLocal) return tpm;
+            ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the prey in this match! You have 60 seconds to find " +
+                "a place to hide before the hunter wakes up!", "Okay");
         }
-        return null;
+        else if (ThirdPersonMovement.LocalPlayerInstance.CurrentRole == Role.Seeker)
+        {
+            ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the hunter in this match! You can start seeking the prey " +
+                "after 60 seconds!", "Okay");
+        }
+        // ThirdPersonMovement.LocalPlayerInstance.StartPhase();
     }
 
     private IEnumerator HidePhase()
@@ -147,10 +124,18 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         while (currentTime < HideTime)
         {
             currentTime += Time.deltaTime;
+            NetworkHelper.SetRoomProperty("Time", currentTime);
+            photonView.RPC("UpdateTimer", RpcTarget.All);
             yield return null;
         }
         CurrentMatchPhase = MatchPhase.Seek;
         StartCoroutine(SeekPhase());
+    }
+
+    [PunRPC]
+    void UpdateTimer()
+    {
+        currentTime = float.Parse(PhotonNetwork.CurrentRoom.CustomProperties["Time"].ToString());
     }
 
     private IEnumerator SeekPhase()
@@ -159,53 +144,77 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         while (currentTime < SeekTime)
         {
             currentTime += Time.deltaTime;
+            NetworkHelper.SetRoomProperty("Time", currentTime);
+            photonView.RPC("UpdateTimer", RpcTarget.All, currentTime);
             yield return null;
         }
         CurrentMatchPhase = MatchPhase.Reset;
     }
 
-    [PunRPC]
     void ImInGame()
     {
-        playersInGame++;
-        //if (playersInGame == PhotonNetwork.PlayerList.Length)
-        //{
-            SpawnPlayer();
-        //}
+        // Pick a random spawn position for new player
+        
+        if (ThirdPersonMovement.LocalPlayerInstance == null)
+        {
+            int rand = Random.Range(0, spawnPoints.Length);
+            while (pickedSpawnIndex.Contains(rand))
+            {
+                rand = Random.Range(0, spawnPoints.Length);
+            }
+            pickedSpawnIndex.Add(rand);
+            GameObject playerObject = PhotonNetwork.Instantiate(PlayerPrefabs[rand], spawnPoints[rand].position, Quaternion.identity);
+            ThirdPersonMovement playerScript = playerObject.GetComponent<ThirdPersonMovement>();
+
+            playerScript.Initialize(PhotonNetwork.LocalPlayer);
+            PhotonNetwork.LocalPlayer.CustomProperties.Add("PlayerMovement", playerScript);
+         
+            
+            photonView.RPC("ReceiveUpdatedPlayerList", RpcTarget.All);
+        }
+        
     }
 
-    void SpawnPlayer()
+    [PunRPC]
+    void ReceiveUpdatedPlayerList()
     {
-        int rand = Random.Range(0, spawnPoints.Length);
-        // int rand2 = Random.Range(0, PlayerPrefabs.Length);
-        while (pickedSpawnIndex.Contains(rand))
+        PlayerList.Clear();
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; ++i)
         {
-            rand = Random.Range(0, spawnPoints.Length);
+            print("Getting player list!");
+            PlayerList.Add(PhotonNetwork.PlayerList[i].CustomProperties["PlayerMovement"] as ThirdPersonMovement);
+            // ThirdPersonMovement tpm = PhotonNetwork.PlayerList[i].CustomProperties["PlayerMovement"] as ThirdPersonMovement;
+            // print(tpm.id);
         }
-        pickedSpawnIndex.Add(rand);
-        GameObject playerObject = PhotonNetwork.Instantiate(PlayerPrefabs[0], spawnPoints[rand].position, Quaternion.identity);
-        //intialize the player
-        ThirdPersonMovement playerScript = playerObject.GetComponent<ThirdPersonMovement>();
-        // playerScript.Initialize(PhotonNetwork.LocalPlayer);
-        playerScript.photonView.RPC("Initialize", RpcTarget.AllViaServer, PhotonNetwork.LocalPlayer);
-        
     }
 
     public void ToggleMicPlayer()
     {
-        bool res = GetLocalPlayer().gameObject.GetComponent<LocalMic>().ToggleMic();
+        bool res = ThirdPersonMovement.LocalPlayerInstance.gameObject.GetComponent<LocalMic>().ToggleMic();
         uiManager.ToggleMic(res);
+    }
+
+    public int GetIdOfPlayer(ThirdPersonMovement player)
+    {
+        for (int i = 0; i < PlayerList.Count; ++i)
+            if (PlayerList[i].gameObject == player.gameObject) return i;
+        return -1;
     }
 
     public ThirdPersonMovement GetPlayer(int playerID)
     {
-        return players.First(x => x.id == playerID);
+        foreach (ThirdPersonMovement tpm in PlayerList)
+        {
+            if (tpm == null) print("Its nulklll");
+            else print(tpm.id);
+            if (tpm != null && tpm.id == playerID) return tpm;
+        }
+        return null;
     }
     public ThirdPersonMovement GetPlayer(GameObject playerObj)
     {
-        return players.First(x => x.gameObject == playerObj);
+        return PlayerList.First(x => x.gameObject == playerObj);
     }
-
     public void BackToLobby()
     {
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Lobby");

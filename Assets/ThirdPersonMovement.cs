@@ -15,6 +15,9 @@ public enum Role {
 
 public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 {
+    public static ThirdPersonMovement LocalPlayerInstance;
+    public bool isMasterClient = false;
+
     public CharacterController Controller;
     public float Speed = 6f;
     public float TurnSmoothTime = 0.1f;
@@ -51,30 +54,26 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        
+        DontDestroyOnLoad(this.gameObject);   
     }
 
     [PunRPC]
     public void Initialize(Player player)
     {
-        //print("Inited" + player.ActorNumber + " size: " + GameplayManager.instance.players.Length);
-        //print(player.NickName);
         photonPlayer = player;
         id = player.ActorNumber;
-        GameplayManager.instance.players[id - 1] = this;
         playerNickName.text = photonPlayer.NickName;
-        // print("Initialized player");
         if (photonView.IsMine)
         {
-            
-        }
-        if (photonPlayer.IsLocal)
-        {
+            LocalPlayerInstance = this;
             Cam = Camera.main.transform;
             CinemachineFreeLook cine = GameObject.FindObjectOfType<CinemachineFreeLook>();
             cine.Follow = transform;
             cine.LookAt = transform;
         }
+
+        if (PhotonNetwork.IsMasterClient) isMasterClient = true;
+
 
         ModalWindowPanel.Instance.ShowModal("Welcome to the game", null, "Use WASD to move, Mouse to look around, and Space to jump! " +
                 "The host can start the game by standing on the portal.", "Okay");
@@ -92,21 +91,12 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         currentSpeed = Speed;
         // photonView.ViewID = 8;
         CurrentRole = Role.Spectator;
-        gameObject.transform.parent = GameplayManager.instance.transform;
+        // gameObject.transform.parent = GameplayManager.instance.transform;
     }
 
     public void StartPhase()
     {
-        if (CurrentRole == Role.Hider)
-        {
-            ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the prey in this match! You have 60 seconds to find " +
-                "a place to hide before the hunter wakes up!", "Okay");
-        } 
-        else if (CurrentRole == Role.Seeker)
-        {
-            ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the hunter in this match! You can start seeking the prey " +
-                "after 60 seconds!", "Okay");
-        }
+        
     }
     public void GrantSeekerBuff()
     {
@@ -125,7 +115,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            photonView.RPC("ToggleLight", RpcTarget.All, photonPlayer);
+            photonView.RPC("ToggleLight", RpcTarget.AllViaServer, id);
         }
 
         Move();
@@ -142,15 +132,9 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void ToggleLight(Player player)
+    public void ToggleLight(int index)
     {
-        ThirdPersonMovement togglePlayer = GameplayManager.instance.players[player.ActorNumber - 1];
-        if (togglePlayer.Controlled)
-        {
-            GameObject light = togglePlayer.GetComponent<ThirdPersonMovement>().Flashlight;
-            light.SetActive(!light.activeInHierarchy);
-        }
-        
+        Flashlight.SetActive(!Flashlight.activeInHierarchy);
     }
 
     private void Move()

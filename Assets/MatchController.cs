@@ -21,12 +21,13 @@ public class MatchController : MonoBehaviourPunCallbacks
     }
     private void Update()
     {
-        ThirdPersonMovement localTPM = manager.GetLocalPlayer();
+        ThirdPersonMovement localTPM = ThirdPersonMovement.LocalPlayerInstance;
         Role.text = localTPM.CurrentRole.ToString();
         switch (manager.CurrentMatchPhase)
         {
             case MatchPhase.Hide:
-                photonView.RPC("UpdateCounter", RpcTarget.All,((int)(manager.HideTime - manager.currentTime)).ToString());
+                // photonView.RPC("UpdateCounter", RpcTarget.All,);
+                CounterNumber.text = ((int)(manager.HideTime - manager.currentTime)).ToString();
                 if (localTPM.CurrentRole == global::Role.Seeker)
                 {
                     Command.text = "Please patiently wait until hiding time runs out.";
@@ -36,7 +37,8 @@ public class MatchController : MonoBehaviourPunCallbacks
                 }
                 break;
             case MatchPhase.Seek:
-                photonView.RPC("UpdateCounter", RpcTarget.All, ((int)(manager.SeekTime - manager.currentTime)).ToString());
+                // photonView.RPC("UpdateCounter", RpcTarget.All, ((int)(manager.SeekTime - manager.currentTime)).ToString());
+                CounterNumber.text = ((int)(manager.HideTime - manager.currentTime)).ToString();
                 if (localTPM.CurrentRole == global::Role.Seeker)
                 {
                     Command.text = "Find the prey and shoot to kill them before time runs out!";
@@ -54,7 +56,7 @@ public class MatchController : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateCounter(string time)
     {
-        CounterNumber.text = time;
+        
     }
 
 }

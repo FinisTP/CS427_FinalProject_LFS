@@ -21,7 +21,7 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
     {
         if (other.CompareTag("Player") && !startedGame)
         {
-            if (LobbyManager.instance.CanStartGame)
+            if (other.GetComponent<ThirdPersonMovement>().isMasterClient && LobbyManager.instance.CanStartGame)
             {
                 ModalWindowPanel.Instance.ShowModal("Start the match", null, "Do you want to start the match now?", "Yes", "No",
                     OnConfirmStartGame);
@@ -54,7 +54,7 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1f);
         CounterNumber.text = "Ready!";
         yield return new WaitForSeconds(1f);
-        GameplayManager.instance.photonView.RPC("StartMatch", RpcTarget.All);
+        GameplayManager.instance.photonView.RPC("StartMatch", RpcTarget.MasterClient);
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Level1");
     }
 }

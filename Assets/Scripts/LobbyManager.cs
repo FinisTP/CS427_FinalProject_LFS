@@ -19,7 +19,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void UpdateLobby()
     {
-        
         photonView.RPC("UpdateLobbyUI", RpcTarget.All);
     }
 
@@ -46,6 +45,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             CanStartGame = false;
         }
-        // NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget., "Lobby");
+        if (GameplayManager.instance != null) GameplayManager.instance.uiManager.UpdatePlayerList();
     }
 }
