@@ -28,6 +28,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     [Header("Players")]
     public string playerPrefabLocation;
     public Transform[] spawnPoints;
+    // public static List<ThirdPersonMovement> players;
     public ThirdPersonMovement[] players;
     private int playersInGame;
     private List<int> pickedSpawnIndex;
