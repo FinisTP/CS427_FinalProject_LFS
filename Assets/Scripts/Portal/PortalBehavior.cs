@@ -22,7 +22,7 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
         if (other.CompareTag("Player") && !startedGame)
         {
             if (!photonView.IsMine) return;
-            if (other.GetComponentInParent<ThirdPersonMovement>().isMasterClient && PhotonNetwork.PlayerList.Length >= 2)
+            if (other.GetComponentInParent<ThirdPersonMovement>().isMasterClient && ValidGameState())
             {
                 ModalWindowPanel.Instance.ShowModal("Start the match", null, "Do you want to start the match now?", "Yes", "No",
                     OnConfirmStartGame);
@@ -32,6 +32,11 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
                     "Only the host can start the game when there are two or more players!", "Okay");
             }
         }
+    }
+
+    private bool ValidGameState()
+    {
+        return true; // PhotonNetwork.PlayerList.Length >= 2;
     }
 
     [PunRPC]

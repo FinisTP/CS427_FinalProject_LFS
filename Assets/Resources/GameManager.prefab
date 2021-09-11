@@ -1753,7 +1753,7 @@ MonoBehaviour:
   particlePlayer: {fileID: 5050408279914512137}
   uiPlayer: {fileID: 5050408280759892467}
   matchPhase: 0
-  hideTime: 60
+  hideTime: 2
   seekTime: 300
   startPositionHider: {fileID: 5050408281100645840}
   startPositionSeeker: {fileID: 5050408281100645840}
