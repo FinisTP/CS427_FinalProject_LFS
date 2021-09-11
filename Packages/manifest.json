@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.ptc.vuforia.engine": "file:com.ptc.vuforia.engine-10.1.4.tgz",
     "com.unity.cinemachine": "2.6.9",
     "com.unity.collab-proxy": "1.5.7",
     "com.unity.formats.fbx": "4.1.0",
