@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum EnemyState {
+    PATROL,
+    INVESTIGATE,
+    CHASE
+}
+
 public class EnemyBehavior : MonoBehaviour
 {
     public Transform[] waypoints;
     public float timeBeforeNextWaypoint;
     private Transform currentTarget;
     private NavMeshAgent agent;
-    private void Start()
+    public EnemyState currentState;
+    private void Awake()
     {
         currentTarget = waypoints[0];
         agent = GetComponent<NavMeshAgent>();
@@ -18,7 +25,14 @@ public class EnemyBehavior : MonoBehaviour
     private void Update()
     {
         agent.SetDestination(currentTarget.position);
-        if (agent.pathStatus == NavMeshPathStatus.PathInvalid || Vector3.Distance(transform.position, currentTarget.position) < 3f)
+        if (currentState == EnemyState.CHASE)
+        {
+            agent.speed = 50f;
+            return;
+        }
+        else agent.speed = 10f;
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial
+            || Vector3.Distance(transform.position, currentTarget.position) < 3f)
         {
             GetRandomTarget();
         }
@@ -26,12 +40,21 @@ public class EnemyBehavior : MonoBehaviour
 
     private void GetRandomTarget()
     {
-        Transform temp = waypoints[Random.Range(0, waypoints.Length)];
-        while (Vector3.Distance(currentTarget.position, temp.position) < 1f)
+        if (currentState == EnemyState.PATROL)
         {
-            temp = waypoints[Random.Range(0, waypoints.Length)];
+            currentTarget = waypoints[Random.Range(0, waypoints.Length)];
+            while (Vector3.Distance(transform.position, currentTarget.position) < 1f)
+            {
+                currentTarget = waypoints[Random.Range(0, waypoints.Length)];
+            }
         }
-        currentTarget = temp;
+        
+    }
+
+    public void Chase(Transform player)
+    {
+        currentState = EnemyState.CHASE;
+        currentTarget = player;
     }
 
 }

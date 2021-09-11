@@ -68,6 +68,13 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     public float JumpMult = 1f;
     private float _defaultHeight;
     private float _defaultCenter;
+    public bool isMoving
+    {
+        get
+        {
+            return controller.velocity.magnitude > 0.5f;
+        }
+    }
 
     [HideInInspector]
     public int id;
@@ -103,7 +110,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     void Fire()
     {
-        GameplayManager.instance.soundPlayer.PlayClip("Laser", 0.5f);
+        GameplayManager.instance.soundPlayer.PlayClip("Laser", 0.1f);
         GameObject bullet = Instantiate(Resources.Load("PlayerBullet") as GameObject, shootBarrel.position, Quaternion.identity);
         bullet.name = photonPlayer.NickName;
         bullet.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100f, ForceMode.Impulse);
@@ -146,7 +153,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
        
         if (Input.GetKeyDown(KeyCode.F))
         {
-            photonView.RPC("ToggleLight", RpcTarget.AllViaServer);
+            photonView.RPC("ToggleLight", RpcTarget.All);
         }
 
         HandleNametag();
@@ -179,11 +186,12 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             _currentSpeed = sprintSpeed;
             _isSprinting = true;
         }
-        else
+        else if (!_isCrouching)
         {
             _currentSpeed = normalSpeed;
             _isSprinting = false;
         }
+        
     }
 
     private void HandleViewMode()
@@ -216,23 +224,24 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     private void HandleCrouch()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftControl))
         {
+            _isCrouching = true;
             _currentSpeed = crouchSpeed;
-            _isCrouching = !_isCrouching;
-            if (_isCrouching)
-            {
-                currentLook.transform.position = waist.transform.position;
-                controller.center = new Vector3(0, _defaultCenter/2, 0);
-                controller.height = _defaultHeight/2;
-            }
-            else
-            {
-                currentLook.transform.position = head.transform.position;
-                controller.center = new Vector3(0, _defaultCenter, 0);
-                controller.height = _defaultHeight;
-            }
+            currentLook.transform.position = waist.transform.position;
+            controller.center = new Vector3(0, _defaultCenter / 2, 0);
+            controller.height = _defaultHeight / 2;
+
+        } 
+        else if (!_isSprinting)
+        {
+            _isCrouching = false;
+            _currentSpeed = normalSpeed;
+            currentLook.transform.position = head.transform.position;
+            controller.center = new Vector3(0, _defaultCenter, 0);
+            controller.height = _defaultHeight;
         }
+        
     }
 
     public void AnnounceRole()
@@ -272,7 +281,9 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             _moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
         }
         else _moveDirection = Vector3.zero;
-        _forwardAmount = _isSprinting? _moveDirection.magnitude : _moveDirection.magnitude/2;
+        _forwardAmount = _moveDirection.magnitude / 2;
+        if (_isSprinting) _forwardAmount *= 2;
+        else if (_isCrouching) _forwardAmount /= 2;
         // UpdateAnimator();
         photonView.RPC("UpdateAnimator", RpcTarget.All, 
             _forwardAmount, _animIsGrounded, _isCrouching, _velocityY, controller.isGrounded);
