@@ -9,7 +9,7 @@ using System;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     public static LobbyManager instance;
-    public string PlayerList;
+    public string playerList;
 
     public bool CanStartGame;
     private void Awake()
@@ -25,16 +25,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateLobbyUI()
     {
-        PlayerList = "";
+        playerList = "";
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             if (player.IsMasterClient)
             {
-                PlayerList += player.NickName + " (Host) \n";
+                playerList += player.NickName + " (Host) \n";
             }
             else
             {
-                PlayerList += player.NickName + " \n";
+                playerList += player.NickName + " \n";
             }
         }
         if (PhotonNetwork.IsMasterClient)
@@ -45,6 +45,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             CanStartGame = false;
         }
-        if (GameplayManager.instance != null) GameplayManager.instance.uiManager.UpdatePlayerList();
+        if (GameplayManager.instance != null) GameplayManager.instance.uiPlayer.UpdatePlayerList();
     }
 }

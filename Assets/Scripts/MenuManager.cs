@@ -14,17 +14,19 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public GameObject currentMenu;
     public GameObject mainMenu;
     public GameObject lobbyMenu;
-    public string SceneToLoad;
+    public string startScene;
 
     [Header("Main Menu")]
     public Button createRoomBtn;
     public Button joinRoomBtn;
-    public TMP_Text Username;
+    public TMP_Text usernameTag;
 
     private void Start()
     {
         createRoomBtn.interactable = false;
         joinRoomBtn.interactable = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     public override void OnConnectedToMaster()
     {
@@ -51,7 +53,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void OnPlayerNameUpdate(TMP_Text playerNameInput)
     {
         PhotonNetwork.NickName = playerNameInput.text;
-        Username.text = "Player: " + playerNameInput.text;
+        usernameTag.text = "Player: " + playerNameInput.text;
     }
     
     public void OnLeaveLobbyBtn()

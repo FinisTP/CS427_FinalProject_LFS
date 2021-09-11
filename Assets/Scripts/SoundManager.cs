@@ -32,7 +32,6 @@ public class SoundManager : MonoBehaviour
         
     }
 
-
     public void PlayClip(string name, float volume = -1)
     {
         foreach (SoundClip clip in SoundClips)

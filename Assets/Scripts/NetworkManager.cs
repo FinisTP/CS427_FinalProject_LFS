@@ -23,6 +23,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         PhotonNetwork.ConnectUsingSettings();
     }
     public bool CreateRoom(string roomName)

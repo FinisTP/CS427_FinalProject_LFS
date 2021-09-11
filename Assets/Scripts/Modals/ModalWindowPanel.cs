@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ModalWindowPanel : MonoBehaviour
 {
@@ -46,21 +47,32 @@ public class ModalWindowPanel : MonoBehaviour
     public void Confirm()
     {
         onConfirmAction?.Invoke();
-        ModalPanel.SetActive(false);
-        ModalWindowBox.SetActive(false);
+        HideModal();
     }
 
     public void Decline()
     {
         onDeclineAction?.Invoke();
+        HideModal();
+    }
+
+    private void HideModal()
+    {
         ModalPanel.SetActive(false);
         ModalWindowBox.SetActive(false);
+        if (!SceneManager.GetActiveScene().name.Equals("Menu"))
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        } 
     }
 
 
     public void ShowModal(string title = "", Sprite imageToShow = null, string message = "", string confirmMessage = "",
         string declineMessage = "", Action confirmAction = null, Action declineAction = null)
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         ModalPanel.SetActive(true);
         ModalWindowBox.SetActive(true);
 
