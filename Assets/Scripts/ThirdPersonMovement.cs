@@ -68,6 +68,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     public float JumpMult = 1f;
     private float _defaultHeight;
     private float _defaultCenter;
+
     public bool isMoving
     {
         get

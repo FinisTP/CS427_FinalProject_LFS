@@ -22,6 +22,7 @@ public class LocalMic : MonoBehaviour
 
     public bool ToggleMic()
     {
+        // print("Called");
         if (view.IsMine)
         {
             VoiceRecorder.TransmitEnabled = !VoiceRecorder.TransmitEnabled;

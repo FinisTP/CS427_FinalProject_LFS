@@ -308,6 +308,36 @@ Transform:
   m_Father: {fileID: 4966560181096501121}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4063205441223563587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 941253243228329197}
+  m_Layer: 0
+  m_Name: FacePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &941253243228329197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4063205441223563587}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 2.625, z: 0.375}
+  m_LocalScale: {x: 0.1125, y: 0.074999996, z: 0.074999996}
+  m_Children: []
+  m_Father: {fileID: 4966560181096501121}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2971351367709908481
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -546,6 +576,7 @@ GameObject:
   - component: {fileID: 4966560181096501144}
   - component: {fileID: 6440431729848952505}
   - component: {fileID: 268707268421534260}
+  - component: {fileID: 9170673646538376766}
   m_Layer: 0
   m_Name: ThirdPersonPlayer2
   m_TagString: Player
@@ -574,6 +605,7 @@ Transform:
   - {fileID: 4955559758592587854}
   - {fileID: 8417637908935540960}
   - {fileID: 8134281484613218826}
+  - {fileID: 941253243228329197}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -917,6 +949,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &9170673646538376766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966560181096501134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07a4c1125f057247888c2152cc0edf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  channel: unity3d
+  spawnPoint: {fileID: 941253243228329197}
+  spaceBetweenUserVideos: 150
+  userVideoPrefab: {fileID: 622384456809661096, guid: 045792ac1e564ba46a047f4d783c685d, type: 3}
 --- !u!1 &4966560181339551596
 GameObject:
   m_ObjectHideFlags: 0

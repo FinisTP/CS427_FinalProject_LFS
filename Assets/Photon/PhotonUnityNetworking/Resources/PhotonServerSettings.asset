@@ -59,6 +59,9 @@ MonoBehaviour:
   - ChangeMatchPhaseToSeek
   - ResetMatch
   - PlayEffectCommand
+  - StartVideo
+  - CreateUserVideoSurface
+  - SendMessageToChat
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

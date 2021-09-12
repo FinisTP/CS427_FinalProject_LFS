@@ -72,6 +72,13 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         playerListSize = playerList.Count;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.M))
         {
             ToggleMicPlayer();
