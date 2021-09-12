@@ -150,6 +150,8 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     {
         if (currentRole == Role.SEEKER && GameplayManager.instance.matchPhase == MatchPhase.HIDE) return;
 
+        if (GameplayManager.instance._isChatting) return;
+
         if (photonPlayer == null || !photonPlayer.IsLocal) return;
        
         if (Input.GetKeyDown(KeyCode.F))
@@ -308,6 +310,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private void FixedUpdate()
     {
         if (photonPlayer == null) return;
+        if (GameplayManager.instance._isChatting) return;
         _shootTime += Time.fixedDeltaTime;
         CheckGroundStatus();
         _isGrounded = controller.isGrounded;

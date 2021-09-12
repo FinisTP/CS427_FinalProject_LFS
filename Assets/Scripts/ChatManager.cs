@@ -24,17 +24,42 @@ public class Message
 public class ChatManager : MonoBehaviourPunCallbacks
 {
     public int maxMessage = 25;
+    public GameObject chatCanvas;
     public GameObject chatPanel;
     public GameObject chatObject;
     public TMP_InputField chatBox;
     public Color playerMessageColor, warningMessageColor, importantMessageColor;
 
+    private bool _chatEnabled = false;
+
     [SerializeField]
     List<Message> messageList = new List<Message>();
+
+    private void Start()
+    {
+        _chatEnabled = false;
+        chatCanvas.SetActive(false);
+    }
 
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            _chatEnabled = !_chatEnabled;
+            if (_chatEnabled)
+            {
+                chatCanvas.SetActive(true);
+                GameplayManager.instance._isChatting = true;
+            } else
+            {
+                chatCanvas.SetActive(false);
+                GameplayManager.instance._isChatting = false;
+            }
+        }
+
+        if (!_chatEnabled) return;
+
         // if (!photonView.IsMine) return;
         if (chatBox.text != "")
         {

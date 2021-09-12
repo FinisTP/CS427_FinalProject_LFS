@@ -2811,7 +2811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundPlayer: {fileID: 5050408281119202206}
   particlePlayer: {fileID: 5050408279914512137}
-  uiPlayer: {fileID: 0}
+  uiPlayer: {fileID: 797751849}
   matchPhase: 0
   hideTime: 2
   seekTime: 300
@@ -2828,6 +2828,7 @@ MonoBehaviour:
   - ThirdPersonPlayer2
   - ThirdPersonPlayer3
   - ThirdPersonPlayer4
+  _isChatting: 0
   playerListSize: 0
 --- !u!114 &5050408280759892466
 MonoBehaviour:
@@ -2864,6 +2865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMessage: 25
+  chatCanvas: {fileID: 1714543641}
   chatPanel: {fileID: 553792581}
   chatObject: {fileID: 3979242405006346365, guid: 12ce3c3ea012b7e48a1c932a66f95bb8, type: 3}
   chatBox: {fileID: 1636616793}

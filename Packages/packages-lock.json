@@ -7,6 +7,14 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.ibicha.youtube-player": {
+      "version": "file:com.ibicha.youtube-player",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
+      }
+    },
     "com.unity.cinemachine": {
       "version": "2.6.9",
       "depth": 0,

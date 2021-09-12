@@ -40,7 +40,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     public Transform[] spawnPoints; // Spawning in starting room
     public List<ThirdPersonMovement> playerList = new List<ThirdPersonMovement>();
     private List<int> _pickedSpawnIndex = new List<int>();
+    private bool _toggleMouse = false;
     public List<string> playerPrefabs;
+    public bool _isChatting = false;
     
     //instance
     public static GameplayManager instance = null;
@@ -63,6 +65,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        _toggleMouse = false;
 
         InitializeLocalPlayer();
         uiPlayer.UpdatePlayerList();
@@ -71,12 +74,23 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (_isChatting) return;
+
         playerListSize = playerList.Count;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            _toggleMouse = !_toggleMouse;
+            if (_toggleMouse)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            } else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            
         }
 
         if (Input.GetKeyDown(KeyCode.M))
