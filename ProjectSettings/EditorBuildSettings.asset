@@ -12,6 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: 6ccc26529877edd44b64c31fb28f637b
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
+    path: Assets/Scenes/Survival.unity
     guid: 51818dc5b45b2a44d911f1cc3eb3226d
+  - enabled: 1
+    path: Assets/Scenes/HideAndSeek.unity
+    guid: b078fdb42a3db134c8e36361b9276d97
+  - enabled: 1
+    path: Assets/Scenes/BattleRoyale.unity
+    guid: 4f78f088656479347b4dd5ec6e2248e0
   m_configObjects: {}

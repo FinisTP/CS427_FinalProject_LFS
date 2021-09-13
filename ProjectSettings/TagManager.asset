@@ -8,6 +8,9 @@ TagManager:
   - bullet
   - Obstacle
   - Enemy
+  - Interactable
+  - Brush
+  - Board
   layers:
   - Default
   - TransparentFX
@@ -18,10 +21,10 @@ TagManager:
   - Ground
   - Obstacle
   - Minimap
-  - 
-  - 
-  - 
-  - 
+  - Highlight
+  - Whiteboard
+  - Brush
+  - Interactable
   - 
   - 
   - 

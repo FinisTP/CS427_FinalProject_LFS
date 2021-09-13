@@ -26,7 +26,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
 
     void Start()
     {
-
+        
         if (!photonView.IsMine)
         {
             return;
@@ -56,10 +56,16 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (videoObject != null)
-            {
-                videoObject.SetActive(!videoObject.activeInHierarchy);
-            }
+            photonView.RPC("ToggleShareVideo", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void ToggleShareVideo()
+    {
+        if (videoObject != null)
+        {
+            videoObject.SetActive(!videoObject.activeInHierarchy);
         }
     }
 
@@ -163,6 +169,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         }
         
         newVideoSurface.SetGameFps(30);
+        videoObject.SetActive(false);
         // Update our "Content" container that holds all the image planes
         // content.sizeDelta = new Vector2(0, playerVideoList.Count * spaceBetweenUserVideos + 140);
         // UpdatePlayerVideoPostions();

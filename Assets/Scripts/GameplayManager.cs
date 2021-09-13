@@ -31,8 +31,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     public MatchPhase matchPhase = MatchPhase.IDLE;
     public float hideTime = 60f;
     public float seekTime = 300f;
-    public Transform startPositionHider;
-    public Transform startPositionSeeker;
+    public Transform startPosition;
     public float currentTime { get { return _currentTime; } }
     private float _currentTime;
 
@@ -48,7 +47,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     public static GameplayManager instance = null;
 
     public int playerListSize = 0;
-
+    public Transform defeatedRoom;
     
 
     private void Awake()
@@ -97,31 +96,29 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
             ToggleMicPlayer();
         }
-
-        if (matchPhase == MatchPhase.HIDE)
-        {
-
-        } 
-        else if (matchPhase == MatchPhase.SEEK)
-        {
-
-        }
     }
 
-    public void StartMatch()
+    public void StartMatchBattleRoyale()
+    {
+        
+    }
+
+    public void StartMatchSurvival()
+    {
+        // photonView.RPC("MatchInformationSurvival", RpcTarget.All);
+    }
+
+
+    public void StartMatchHideAndSeek()
     {
         // A match should have at least one seeker
-        print("There are " + playerList.Count + " options");
-        
         int seekerId = Random.Range(0, playerList.Count);
         while (playerList[seekerId] == null) seekerId = Random.Range(0, playerList.Count);
 
-        print("picked " + seekerId);
         photonView.RPC("MatchInformation", RpcTarget.All, seekerId);
 
         NetworkHelper.SetRoomProperty("Time", currentTime);
         StartCoroutine(HidePhase());
-        // photonView.RPC("MatchInformation", RpcTarget.All);
     }
 
     [PunRPC]
@@ -130,15 +127,13 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         matchPhase = MatchPhase.HIDE;
         playerList[seekerId].currentRole = Role.SEEKER;
         playerList[seekerId].GrantSeekerBuff();
-        playerList[seekerId].transform.position = startPositionSeeker.position;
-        // NetworkHelper.SetPlayerProperty(playerList[seekerId].photonPlayer, "Role", playerList[seekerId].currentRole);
+        playerList[seekerId].transform.position = startPosition.position;
 
         for (int i = 0; i < playerList.Count; ++i)
         {
             if (playerList[i] == null || i == seekerId) continue;
-            playerList[i].gameObject.transform.position = startPositionHider.position;
+            playerList[i].gameObject.transform.position = startPosition.position;
             playerList[i].currentRole = Role.HIDER;
-            // NetworkHelper.SetPlayerProperty(playerList[i].photonPlayer, "Role", playerList[i].currentRole);    
         }
         ThirdPersonMovement.LocalPlayerInstance.AnnounceRole();
     }
@@ -170,13 +165,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine || !PhotonNetwork.IsMasterClient) return;
         matchPhase = MatchPhase.RESET;
-        ThirdPersonMovement[] tpms = FindObjectsOfType<ThirdPersonMovement>();
-        foreach (ThirdPersonMovement tpm in tpms)
-        {
-            // if (tpm != null) PhotonNetwork.Destroy(tpm.gameObject);
-        }
-        PhotonNetwork.Destroy(GameplayManager.instance.gameObject);
         PhotonNetwork.DestroyAll();
+        PhotonNetwork.Destroy(GameplayManager.instance.gameObject);
+        
         
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Lobby");
     }
@@ -207,6 +198,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
             photonView.RPC("UpdateTimer", RpcTarget.Others, _currentTime);
             yield return new WaitForSeconds(1f);
         }
+        WinGame();
+    }
+
+    public void WinGame()
+    {
         photonView.RPC("ResetMatch", RpcTarget.MasterClient);
     }
 

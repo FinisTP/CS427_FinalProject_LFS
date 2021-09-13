@@ -15,7 +15,7 @@ public class OnlineVideoLoader : MonoBehaviour
     void Start()
     {
         // videoPlayer.url = videoUrl;
-        PlayVideo();
+        // PlayVideo();
         videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
         videoPlayer.EnableAudioTrack(0, true);
         videoPlayer.Prepare();
@@ -23,7 +23,7 @@ public class OnlineVideoLoader : MonoBehaviour
     }
 
 
-    async void PlayVideo()
+    public async void PlayVideo()
     {
         await videoPlayer.PlayYoutubeVideoAsync(videoUrl);
     }

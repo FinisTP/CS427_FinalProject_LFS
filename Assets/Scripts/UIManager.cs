@@ -15,9 +15,15 @@ public class UIManager : MonoBehaviour
     public Sprite MuteIcon;
     public Sprite UnmuteIcon;
 
+    [Header("Interaction")]
+    public TMP_Text interactionText;
+    public GameObject interactionProgress;
+
     private void Start()
     {
         PlayerListObj.SetActive(false);
+        interactionText.text = "";
+        interactionProgress.SetActive(false);
     }
     public void ToggleMic(bool state)
     {
@@ -44,6 +50,29 @@ public class UIManager : MonoBehaviour
         {
             PlayerListObj.SetActive(!PlayerListObj.activeInHierarchy);
         }
+    }
+
+    public void ShowInteraction(string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+            interactionText.text = "(E) " + text;
+        else interactionText.text = "";
+    }
+
+    public void StartInteraction()
+    {
+        interactionProgress.SetActive(true);
+        interactionProgress.GetComponent<Slider>().value = 0;
+    }
+
+    public void UpdateInteraction(float value, float maxValue)
+    {
+        interactionProgress.GetComponent<Slider>().value = value / maxValue;
+    }
+
+    public void EndInteraction()
+    {
+        interactionProgress.SetActive(false);
     }
 
 }

@@ -44,17 +44,15 @@ public class ChatManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T) && !chatBox.isFocused)
         {
             _chatEnabled = !_chatEnabled;
             if (_chatEnabled)
             {
-                chatCanvas.SetActive(true);
-                GameplayManager.instance._isChatting = true;
+                EnableChat();
             } else
             {
-                chatCanvas.SetActive(false);
-                GameplayManager.instance._isChatting = false;
+                DisableChat();
             }
         }
 
@@ -65,21 +63,77 @@ public class ChatManager : MonoBehaviourPunCallbacks
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                if (ExecuteCommand(chatBox.text))
                 photonView.RPC("SendMessageToChat", RpcTarget.All,
+                    PhotonNetwork.LocalPlayer.NickName, chatBox.text, (byte)Message.MessageType.WARNING);
+                else
+                {
+                    photonView.RPC("SendMessageToChat", RpcTarget.All,
                     PhotonNetwork.LocalPlayer.NickName, chatBox.text, (byte)Message.MessageType.PLAYER_MESSAGE);
+                }
                 // SendMessageToChat(chatBox.text, Message.MessageType.PLAYER_MESSAGE);
                 chatBox.text = "";
             }
         }
-        else
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (!chatBox.isFocused && Input.GetKeyDown(KeyCode.Return))
+            if (!chatBox.isFocused)
             {
                 chatBox.Select();
                 chatBox.ActivateInputField();
             }
+            else
+            {
+                DisableChat();
+            }
+        } 
+    }
+
+    public bool ExecuteCommand(string text)
+    {
+        if (text.StartsWith(".cmd "))
+        {
+            // is a command
+            string cmd = text.Substring(5);
+            if (cmd.StartsWith("p ") || cmd.StartsWith("play "))
+            {
+                // play video
+                photonView.RPC("PlayVideo", RpcTarget.All, cmd.Substring(2));
+            }
+            else if (cmd.StartsWith("erase"))
+            {
+                // erase board
+                photonView.RPC("EraseBoard", RpcTarget.All);
+            }
+            return true;
         }
-            
+        return false;
+    }
+
+    [PunRPC]
+    public void PlayVideo(string url)
+    {
+        OnlineVideoLoader ovl = FindObjectOfType<OnlineVideoLoader>();
+        ovl.videoUrl = url;
+        ovl.PlayVideo();
+    }
+
+    [PunRPC]
+    public void EraseBoard()
+    {
+        FindObjectOfType<Paintable>().EraseBoard();
+    }
+
+    public void EnableChat()
+    {
+        chatCanvas.SetActive(true);
+        GameplayManager.instance._isChatting = true;
+    }
+
+    public void DisableChat()
+    {
+        chatCanvas.SetActive(false);
+        GameplayManager.instance._isChatting = false;
     }
 
     Color MessageTypeColor(Message.MessageType messageType)
@@ -102,6 +156,8 @@ public class ChatManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SendMessageToChat(string author, string text, byte messageType)
     {
+        if (!_chatEnabled) EnableChat();
+
         if (messageList.Count > maxMessage)
         {
             Destroy(messageList[0].chatObject.gameObject);

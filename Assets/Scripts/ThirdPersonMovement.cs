@@ -10,7 +10,8 @@ using Cinemachine;
 public enum Role {
     HIDER,
     SEEKER,
-    SPECTATOR
+    SPECTATOR,
+    UNASSIGNED
 }
 
 public class ThirdPersonMovement : MonoBehaviourPunCallbacks
@@ -61,6 +62,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private GameObject _TPSCamera;
     private GameObject _FPSCamera;
     private bool _isFPSView = false;
+    private bool _flashlightOn = false;
 
     [Header("Role Specs")]
     public Role currentRole;
@@ -69,13 +71,31 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private float _defaultHeight;
     private float _defaultCenter;
 
+    [Header("Player Stats")]
+    public bool isDefeated = false;
+    public float maxHealth;
+    
+    public float health
+    {
+        get
+        {
+            return _health;
+        }
+    }
+    private float _health;
+    
+
     public bool isMoving
     {
         get
         {
-            return controller.velocity.magnitude > 0.5f;
+            return !_isCrouching || controller.velocity.magnitude > 0.2f;
         }
     }
+    private bool _isInteracting = false;
+
+    public int toolCount = 0;
+    public int bulletCount = 0;
 
     [HideInInspector]
     public int id;
@@ -105,18 +125,26 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     public void ToggleLight()
     {
+        _flashlightOn = !_flashlightOn;
+        GameplayManager.instance.soundPlayer.Play3DSound("Flashlight", transform.position, 0.5f, 3f);
         flashlight.SetActive(!flashlight.activeInHierarchy);
     }
 
     [PunRPC]
     void Fire()
     {
-        GameplayManager.instance.soundPlayer.PlayClip("Laser", 0.1f);
+        GameplayManager.instance.soundPlayer.Play3DSound("Laser", transform.position, 0.1f, 3f);
         GameObject bullet = Instantiate(Resources.Load("PlayerBullet") as GameObject, shootBarrel.position, Quaternion.identity);
         bullet.name = photonPlayer.NickName;
         bullet.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100f, ForceMode.Impulse);
         bullet.GetComponent<ProjectileBehavior>().owner = this;
         Destroy(bullet, 5f);
+    }
+
+    [PunRPC]
+    void AddHealth(float amount)
+    {
+        _health = Mathf.Clamp(_health + amount, 0, maxHealth);
     }
 
     private void Start()
@@ -245,6 +273,20 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             controller.height = _defaultHeight;
         }
         
+    }
+
+    public void SetDefeated(float time)
+    {
+        transform.position = GameplayManager.instance.defeatedRoom.position;
+        isDefeated = true;
+        StartCoroutine(DefeatState(time));
+    }
+
+    private IEnumerator DefeatState(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isDefeated = true;
+        transform.position = GameplayManager.instance.startPosition.position;
     }
 
     public void AnnounceRole()

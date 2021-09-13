@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class EnemyDetection : MonoBehaviour
 {
@@ -12,9 +13,26 @@ public class EnemyDetection : MonoBehaviour
     {
         if (playersInSight.Count <= 0)
         {
+            if (enemy.currentState == EnemyState.CHASE)
+            {
+                enemy.currentState = EnemyState.PATROL;
+                enemy.GetRandomTarget();
+            }
+            
+            return;
+        }
+        ThirdPersonMovement[] sorted = playersInSight.Where(player => !player.isDefeated).ToArray();
+        if (sorted.Length > 0)
+        {
+            ThirdPersonMovement closest = sorted.OrderBy(player => Vector3.Distance(transform.position, player.transform.position)).First();
+            enemy.Chase(closest.transform);
+        }
+        else
+        {
             enemy.currentState = EnemyState.PATROL;
             return;
         }
+        /*
         foreach (ThirdPersonMovement tpm in playersInSight)
         {
             if (tpm.isMoving)
@@ -30,6 +48,7 @@ public class EnemyDetection : MonoBehaviour
                 }
             }
         }
+        */
     }
     private void OnTriggerEnter(Collider other)
     {

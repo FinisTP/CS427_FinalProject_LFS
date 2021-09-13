@@ -19,6 +19,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource Footstep;
     public AudioSource Trance;
 
+    public GameObject AudioSourcePrefab;
     public AudioClip TitleClip;
     public AudioClip TitleAmbience;
 
@@ -44,6 +45,26 @@ public class SoundManager : MonoBehaviour
                 }
                 else
                     GetComponent<AudioSource>().PlayOneShot(clip.track, volume);
+                break;
+            }
+        }
+    }
+
+    public void Play3DSound(string name, Vector3 position, float volume = -1, float time = 5f)
+    {
+        GameObject soundPlayer = Instantiate(AudioSourcePrefab, position, Quaternion.identity);
+        Destroy(soundPlayer, time);
+        
+        foreach (SoundClip clip in SoundClips)
+        {
+            if (clip.name == name)
+            {
+                if (volume == -1)
+                {
+                    soundPlayer.GetComponent<AudioSource>().PlayOneShot(clip.track);
+                }
+                else
+                    soundPlayer.GetComponent<AudioSource>().PlayOneShot(clip.track, volume);
                 break;
             }
         }
@@ -151,7 +172,4 @@ public class SoundManager : MonoBehaviour
             ContinueAllTracks();
         }
     }
-
-
-
 }

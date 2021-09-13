@@ -1,0 +1,22 @@
+# Blender MTL File: 'Battery.blend'
+# Material Count: 2
+
+newmtl BatteryBody
+Ns 1000.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.389517 0.389517 0.389517
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Battery_UVW.tga
+
+newmtl upDownMat
+Ns 792.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.558553 0.558553 0.558553
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Battery_UVW.tga

@@ -13,39 +13,40 @@ public class EnemyBehavior : MonoBehaviour
 {
     public Transform[] waypoints;
     public float timeBeforeNextWaypoint;
-    private Transform currentTarget;
+    public Vector3 currentTarget;
     private NavMeshAgent agent;
     public EnemyState currentState;
     private void Awake()
     {
-        currentTarget = waypoints[0];
+        currentTarget = waypoints[0].position;
         agent = GetComponent<NavMeshAgent>();
         InvokeRepeating("GetRandomTarget", 1f, 100f);
     }
     private void Update()
     {
-        agent.SetDestination(currentTarget.position);
+        if (currentTarget == null) return;
+        agent.SetDestination(currentTarget);
         if (currentState == EnemyState.CHASE)
         {
-            agent.speed = 50f;
+            agent.speed = 30f;
             return;
         }
         else agent.speed = 10f;
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial
-            || Vector3.Distance(transform.position, currentTarget.position) < 3f)
+            || Vector3.Distance(transform.position, currentTarget) < 3f)
         {
             GetRandomTarget();
         }
     }
 
-    private void GetRandomTarget()
+    public void GetRandomTarget()
     {
         if (currentState == EnemyState.PATROL)
         {
-            currentTarget = waypoints[Random.Range(0, waypoints.Length)];
-            while (Vector3.Distance(transform.position, currentTarget.position) < 1f)
+            currentTarget = waypoints[Random.Range(0, waypoints.Length)].position;
+            while (Vector3.Distance(transform.position, currentTarget) < 1f)
             {
-                currentTarget = waypoints[Random.Range(0, waypoints.Length)];
+                currentTarget = waypoints[Random.Range(0, waypoints.Length)].position;
             }
         }
         
@@ -54,7 +55,15 @@ public class EnemyBehavior : MonoBehaviour
     public void Chase(Transform player)
     {
         currentState = EnemyState.CHASE;
-        currentTarget = player;
+        currentTarget = player.position;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<ThirdPersonMovement>().SetDefeated(15f);
+        }
     }
 
 }

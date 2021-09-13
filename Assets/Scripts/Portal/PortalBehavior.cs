@@ -6,12 +6,20 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 
+public enum PortalType
+{
+    SURVIVAL,
+    HIDENSEEK,
+    ROYALE
+}
+
 public class PortalBehavior : MonoBehaviourPunCallbacks
 {
     private Action OnConfirmStartGame;
     private bool startedGame = false;
     public GameObject Counter;
     public TMP_Text CounterNumber;
+    public PortalType portalType;
     private void Start()
     {
         OnConfirmStartGame += StartGame;
@@ -64,11 +72,41 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1f);
         CounterNumber.text = "Ready!";
         yield return new WaitForSeconds(1f);
+        Commence();
+    }
+
+    private void Commence()
+    {
         if (photonView.IsMine && PhotonNetwork.IsMasterClient)
         {
-            GameplayManager.instance.StartMatch();
+            switch (portalType)
+            {
+                case PortalType.HIDENSEEK:
+                    GameplayManager.instance.StartMatchHideAndSeek();
+                    break;
+                case PortalType.ROYALE:
+                    GameplayManager.instance.StartMatchBattleRoyale();
+                    break;
+                case PortalType.SURVIVAL:
+                    GameplayManager.instance.StartMatchSurvival();
+                    break;
+            }
+            
         }
+
+        switch (portalType)
+        {
+            case PortalType.HIDENSEEK:
+                NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "HideAndSeek");
+                break;
+            case PortalType.ROYALE:
+                NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "BattleRoyale");
+                break;
+            case PortalType.SURVIVAL:
+                NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Survival");
+                break;
+        }
+
         
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Level1");
     }
 }
