@@ -20,6 +20,7 @@ public class ItemSpawner : MonoBehaviourPunCallbacks
     public Transform[] spawnPositions;
     public ItemCount[] itemCounts;
     public float spawnDelay;
+    private int totalOccupied = 0;
     private void Start()
     {
         if (!PhotonNetwork.IsMasterClient || !photonView.IsMine) return;
@@ -28,18 +29,22 @@ public class ItemSpawner : MonoBehaviourPunCallbacks
 
     public void SpawnItem()
     {
+        // if (totalOccupied >= spawnPositions.Length) return;
         foreach(ItemCount ic in itemCounts)
         {
             if (ic.currentCount < ic.maxCount)
             {
+                int time = 0;
                 int randomPos = Random.Range(0, spawnPositions.Length);
-                while (spawnPositions[randomPos].childCount > 0)
+                while (time < 10 && spawnPositions[randomPos].childCount > 0)
                 {
+                    time++;
                     randomPos = Random.Range(0, spawnPositions.Length);
                 }
-                GameObject newObj = PhotonNetwork.Instantiate(ic.itemPrefabName, spawnPositions[randomPos].position, spawnPositions[randomPos].rotation);
+                GameObject newObj = PhotonNetwork.Instantiate("Props\\" + ic.itemPrefabName, spawnPositions[randomPos].position, spawnPositions[randomPos].rotation);
                 newObj.transform.SetParent(spawnPositions[randomPos]);
                 ic.currentCount++;
+                totalOccupied++;
             }
         }
     }
@@ -48,7 +53,11 @@ public class ItemSpawner : MonoBehaviourPunCallbacks
     {
         foreach (ItemCount ic in itemCounts)
         {
-            if (ic.type == interactable.itemType) ic.currentCount--;
+            if (ic.type == interactable.itemType)
+            {
+                ic.currentCount--;
+                // totalOccupied--;
+            }
         }
     }
 

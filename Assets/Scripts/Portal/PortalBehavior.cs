@@ -32,7 +32,20 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
             if (!photonView.IsMine) return;
             if (other.GetComponentInParent<ThirdPersonMovement>().isMasterClient && ValidGameState())
             {
-                ModalWindowPanel.Instance.ShowModal("Start the match", null, "Do you want to start the match now?", "Yes", "No",
+                string announcement = "";
+                switch(portalType)
+                {
+                    case PortalType.HIDENSEEK:
+                        announcement = "Would you like to start the \"Hide and Seek\" match now?";
+                        break;
+                    case PortalType.SURVIVAL:
+                        announcement = "Would you like to start the \"Survival\" match now?";
+                        break;
+                    case PortalType.ROYALE:
+                        announcement = "Would you like to start the \"Battle Royale\" match now?";
+                        break;
+                }
+                ModalWindowPanel.Instance.ShowModal("Start the match", null, announcement, "Yes", "No",
                     OnConfirmStartGame);
             } else
             {
@@ -44,7 +57,8 @@ public class PortalBehavior : MonoBehaviourPunCallbacks
 
     private bool ValidGameState()
     {
-        return true; // PhotonNetwork.PlayerList.Length >= 2;
+        // if (portalType == PortalType.HIDENSEEK) return PhotonNetwork.PlayerList.Length >= 2;
+        return true;
     }
 
     [PunRPC]

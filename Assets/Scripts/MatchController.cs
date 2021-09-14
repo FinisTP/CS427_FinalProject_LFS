@@ -64,6 +64,7 @@ public class MatchController : MonoBehaviourPunCallbacks
         EnergyBar.GetComponent<RectTransform>().localScale = scale;
     }
 
+    [PunRPC]
     public void ActivateGenerator()
     {
         currentGeneratorCount++;

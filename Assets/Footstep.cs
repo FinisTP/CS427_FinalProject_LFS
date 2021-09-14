@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Footstep : MonoBehaviour
 {
+    public AudioClip jumpClip;
+    public AudioClip landClip;
     public AudioClip[] clips;
     private AudioSource audioSource;
     private void Start()
@@ -26,5 +28,17 @@ public class Footstep : MonoBehaviour
             audioSource.volume = 0.5f;
             audioSource.PlayOneShot(clip);
         }
+    }
+
+    public void Jump(AnimationEvent animationEvent)
+    {
+        audioSource.volume = 1f;
+        audioSource.PlayOneShot(jumpClip);
+    }
+
+    public void Land(AnimationEvent animationEvent)
+    {
+        audioSource.volume = 0.5f;
+        audioSource.PlayOneShot(landClip);
     }
 }

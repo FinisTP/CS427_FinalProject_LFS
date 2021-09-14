@@ -95,7 +95,7 @@ public class Interactable : MonoBehaviourPunCallbacks
 
     private void InteractMorph(ThirdPersonMovement player)
     {
-
+        player.Morph(this.gameObject);
     }
 
     private void InteractBattery(ThirdPersonMovement player)
@@ -121,7 +121,7 @@ public class Interactable : MonoBehaviourPunCallbacks
         photonView.RPC("Generator", RpcTarget.All);
         MatchController temp = FindObjectOfType<MatchController>();
         temp.SetBatteryCount(player.toolCount);
-        temp.ActivateGenerator();
+        temp.photonView.RPC("ActivateGenerator", RpcTarget.All);
         temp.photonView.RPC("SetEnergy", RpcTarget.All, temp.maxEnergy);
     }
 

@@ -27,14 +27,8 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     public ParticleManager particlePlayer;
     public UIManager uiPlayer;
 
-    [Header("Match status")] // to be replaced with MatchPrefs
-    public MatchPhase matchPhase = MatchPhase.IDLE;
-    public float hideTime = 60f;
-    public float seekTime = 300f;
     public Transform startPosition;
-    public float currentTime { get { return _currentTime; } }
-    private float _currentTime;
-
+    
     [Header("Players")]
     public Transform[] spawnPoints; // Spawning in starting room
     public List<ThirdPersonMovement> playerList = new List<ThirdPersonMovement>();
@@ -68,7 +62,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
         InitializeLocalPlayer();
         uiPlayer.UpdatePlayerList();
-        _currentTime = 0;
     }
 
     private void Update()
@@ -111,48 +104,9 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     public void StartMatchHideAndSeek()
     {
-        // A match should have at least one seeker
-        int seekerId = Random.Range(0, playerList.Count);
-        while (playerList[seekerId] == null) seekerId = Random.Range(0, playerList.Count);
-
-        photonView.RPC("MatchInformation", RpcTarget.All, seekerId);
-
-        NetworkHelper.SetRoomProperty("Time", currentTime);
-        StartCoroutine(HidePhase());
+        
     }
 
-    [PunRPC]
-    void MatchInformation(int seekerId)
-    {
-        matchPhase = MatchPhase.HIDE;
-        playerList[seekerId].currentRole = Role.SEEKER;
-        playerList[seekerId].GrantSeekerBuff();
-        playerList[seekerId].transform.position = startPosition.position;
-
-        for (int i = 0; i < playerList.Count; ++i)
-        {
-            if (playerList[i] == null || i == seekerId) continue;
-            playerList[i].gameObject.transform.position = startPosition.position;
-            playerList[i].currentRole = Role.HIDER;
-        }
-        ThirdPersonMovement.LocalPlayerInstance.AnnounceRole();
-    }
-
-    [PunRPC]
-    void UpdateTimer(float time)
-    {
-        _currentTime = time; // float.Parse(PhotonNetwork.CurrentRoom.CustomProperties["Time"].ToString());
-    }
-
-    [PunRPC]
-    void ChangeMatchPhaseToSeek()
-    {
-        matchPhase = MatchPhase.SEEK;
-        foreach (ThirdPersonMovement tpm in playerList)
-        {
-            tpm.playerNickName.text = "";
-        }
-    }
 
     [PunRPC]
     public void PlayEffectCommand(string name, Vector3 location)
@@ -164,7 +118,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     void ResetMatch()
     {
         if (!photonView.IsMine || !PhotonNetwork.IsMasterClient) return;
-        matchPhase = MatchPhase.RESET;
         PhotonNetwork.DestroyAll();
         PhotonNetwork.Destroy(GameplayManager.instance.gameObject);
         
@@ -172,35 +125,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Lobby");
     }
 
-    private IEnumerator HidePhase()
+    IEnumerator WinGameCoroutine()
     {
-        _currentTime = 0;
-        while (_currentTime < hideTime)
-        {
-            _currentTime += 1f;
-            NetworkHelper.SetRoomProperty("Time", _currentTime);
-            photonView.RPC("UpdateTimer", RpcTarget.Others, _currentTime);
-            yield return new WaitForSeconds(1f);
-        }
-        photonView.RPC("ChangeMatchPhaseToSeek", RpcTarget.All);
-        // matchPhase = MatchPhase.SEEK;
-        StartCoroutine(SeekPhase());
+        yield return new WaitForSeconds(5f);
     }
-
-
-    private IEnumerator SeekPhase()
-    {
-        _currentTime = 0;
-        while (_currentTime < seekTime)
-        {
-            _currentTime += 1f;
-            NetworkHelper.SetRoomProperty("Time", _currentTime);
-            photonView.RPC("UpdateTimer", RpcTarget.Others, _currentTime);
-            yield return new WaitForSeconds(1f);
-        }
-        WinGame();
-    }
-
+   
     public void WinGame()
     {
         photonView.RPC("ResetMatch", RpcTarget.MasterClient);

@@ -45,6 +45,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private bool _isJumping = false;
     private float _forwardAmount;
     private bool _isSprinting = false;
+    public bool isFound = false;
 
     [Header("Associated Components")]
     public Transform feet;
@@ -57,6 +58,8 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     public Player photonPlayer = null;
     public TMP_Text playerNickName;
 
+    public GameObject GFX;
+    public GameObject morphObject = null;
     public Transform currentLook;
     private Transform _playerCamera;
     private GameObject _TPSCamera;
@@ -176,7 +179,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (currentRole == Role.SEEKER && GameplayManager.instance.matchPhase == MatchPhase.HIDE) return;
+        // if (currentRole == Role.SEEKER && GameplayManager.instance.matchPhase == MatchPhase.HIDE) return;
 
         if (GameplayManager.instance._isChatting) return;
 
@@ -197,6 +200,24 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         Jump();
 
         controller.Move((_moveDirection.normalized * _currentSpeed * SpeedMult + _velocityY * JumpMult * Vector3.up) * Time.deltaTime);
+    }
+
+    public void Morph(GameObject obj)
+    {
+        if (morphObject != null)
+        {
+            Destroy(morphObject);
+            morphObject = null;
+        }
+        morphObject = Instantiate(obj, transform.position, transform.rotation);
+        morphObject.transform.SetParent(transform);
+        morphObject.transform.localPosition = new Vector3(0, 0, 0);
+        morphObject.transform.localRotation = Quaternion.identity;
+        morphObject.transform.localScale = new Vector3(1, 1, 1); ;
+        morphObject.tag = "Player";
+        morphObject.layer = LayerMask.NameToLayer("Default");
+        GFX.SetActive(false);
+        obj.GetComponent<Interactable>().enabled = false;
     }
 
     private void HandleNametag()
@@ -385,6 +406,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateAnimator(float forwardAmount, bool animIsGrounded, bool isCrouching, float velocityY, bool controllerIsGrounded)
     {
+        if (!GFX.activeInHierarchy) return;
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetBool("OnGround", animIsGrounded);
         animator.SetBool("Crouch", isCrouching);
@@ -403,6 +425,24 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         if (controllerIsGrounded)
         {
             animator.SetFloat("JumpLeg", jumpLeg);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (currentRole == Role.SEEKER)
+        {
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                ThirdPersonMovement tpm = collision.gameObject.GetComponent<ThirdPersonMovement>();
+                if (tpm.currentRole == Role.HIDER && !tpm.isFound)
+                {
+                    //HideNSeekController controller = 
+                    FindObjectOfType<HideNSeekController>().photonView.RPC("FoundPlayer", RpcTarget.All);
+                    tpm.isFound = true;
+                    tpm.SetDefeated(500f);
+                }
+            }
         }
     }
 }

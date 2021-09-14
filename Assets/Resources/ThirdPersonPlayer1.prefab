@@ -353,6 +353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ab25cd7cb04224db3aee3a8f8fd930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpClip: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
+  landClip: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
   clips:
   - {fileID: 8300000, guid: 42e65e088b3f4374e851b8dbd38f3df9, type: 3}
   - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
@@ -831,6 +833,7 @@ MonoBehaviour:
   crouchSpeed: 3
   jumpSpeed: 10
   shootDelay: 0.5
+  isFound: 0
   feet: {fileID: 3093773771637546164}
   waist: {fileID: 5466328265863249581}
   groundMask:
@@ -841,6 +844,8 @@ MonoBehaviour:
   shootBarrel: {fileID: 250602392448630228}
   flashlight: {fileID: 6691454753117897980}
   playerNickName: {fileID: 606190148190917607}
+  GFX: {fileID: 273977418114305587}
+  morphObject: {fileID: 0}
   currentLook: {fileID: 2392817342237723094}
   currentRole: 2
   SpeedMult: 2
