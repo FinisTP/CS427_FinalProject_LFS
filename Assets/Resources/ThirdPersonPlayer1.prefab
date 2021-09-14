@@ -1550,6 +1550,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3093773772955378778}
     m_Modifications:
+    - target: {fileID: 580050495545100061, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1280717967684997394, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_DirtyAABB
       value: 0
@@ -1577,6 +1581,14 @@ PrefabInstance:
     - target: {fileID: 1280717967684997394, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_AABB.m_Extent.z
       value: 0.14803573
+      objectReference: {fileID: 0}
+    - target: {fileID: 1860083414984005715, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955176192105182851, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2125076408001015623, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_DirtyAABB
@@ -1613,6 +1625,10 @@ PrefabInstance:
     - target: {fileID: 3193348162285702473, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7199171455610157055, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7665930101113497664, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_RootOrder
@@ -1669,6 +1685,10 @@ PrefabInstance:
     - target: {fileID: 7665930101113497664, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8150943058881757804, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8159654180151468715, guid: 5df615dc97e0cb546b061a85e4bab9cf, type: 3}
       propertyPath: m_DirtyAABB

@@ -12,7 +12,7 @@ public class InteractableBehavior : MonoBehaviour
     {
         if (objectsInRange.Count == 0)
         {
-            print("No Object!");
+            // print("No Object!");
             EndInteraction();
             return;
         }

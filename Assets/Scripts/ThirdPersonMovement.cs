@@ -95,7 +95,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             return !_isCrouching || controller.velocity.magnitude > 0.2f;
         }
     }
-    private bool _isInteracting = false;
+    private bool _isFPS = false;
 
     public int toolCount = 0;
     public int bulletCount = 0;
@@ -134,14 +134,16 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void Fire()
+    void Fire(float x = 0, float y = 0, float z = 0)
     {
         GameplayManager.instance.soundPlayer.Play3DSound("Laser", transform.position, 0.1f, 3f);
         GameObject bullet = Instantiate(Resources.Load("PlayerBullet") as GameObject, shootBarrel.position, Quaternion.identity);
+        bullet.transform.LookAt(new Vector3(x, y, z));
+
         bullet.name = photonPlayer.NickName;
-        bullet.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100f, ForceMode.Impulse);
+        bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * 200f, ForceMode.Impulse);
         bullet.GetComponent<ProjectileBehavior>().owner = this;
-        Destroy(bullet, 5f);
+        Destroy(bullet, 3f);
     }
 
     [PunRPC]
@@ -216,7 +218,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         morphObject.transform.localScale = new Vector3(1, 1, 1); ;
         morphObject.tag = "Player";
         morphObject.layer = LayerMask.NameToLayer("Default");
-        GFX.SetActive(false);
+        ToggleFX(false);
         obj.GetComponent<Interactable>().enabled = false;
     }
 
@@ -253,11 +255,13 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             _isFPSView = !_isFPSView;
             if (_isFPSView)
             {
+                ToggleFX(false);
                 _TPSCamera.SetActive(false);
                 _FPSCamera.SetActive(true);
             }
             else
             {
+                ToggleFX(true);
                 _TPSCamera.SetActive(true);
                 _FPSCamera.SetActive(false);
             }
@@ -266,11 +270,16 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     private void HandleShoot()
     {
-        if (currentRole == Role.SEEKER && _shootTime >= shootDelay 
+        if (currentRole == Role.SPECTATOR && _shootTime >= shootDelay 
             && (Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Shoot")))
         {
+            Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, int.MaxValue);
+            position = Camera.main.ScreenToWorldPoint(position);
+
+            // Vector3 target = (position - shootBarrel.position).normalized;
             _shootTime = 0f;
-            photonView.RPC("Fire", RpcTarget.All);
+            photonView.RPC("Fire", RpcTarget.All, position.x, position.y, position.z);
+            
         }
     }
 
@@ -301,6 +310,23 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         transform.position = GameplayManager.instance.defeatedRoom.position;
         isDefeated = true;
         StartCoroutine(DefeatState(time));
+    }
+
+    private void ToggleFX(bool state)
+    {
+        if (state)
+        {
+            foreach (Transform child in GFX.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
+        } else
+        {
+            foreach (Transform child in GFX.transform)
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
     }
 
     private IEnumerator DefeatState(float time)
@@ -406,7 +432,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateAnimator(float forwardAmount, bool animIsGrounded, bool isCrouching, float velocityY, bool controllerIsGrounded)
     {
-        if (!GFX.activeInHierarchy) return;
+        // if (!GFX.activeInHierarchy) return;
         animator.SetFloat("Forward", forwardAmount, 0.1f, Time.deltaTime);
         animator.SetBool("OnGround", animIsGrounded);
         animator.SetBool("Crouch", isCrouching);

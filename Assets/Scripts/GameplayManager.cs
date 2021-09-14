@@ -150,8 +150,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         playerScript.photonView.RPC("Initialize", RpcTarget.AllBuffered, PhotonNetwork.LocalPlayer);
         // PhotonNetwork.LocalPlayer.CustomProperties.Add("PlayerMovement", playerScript);
         StartCoroutine(Wait());
-        
-
     }
 
     IEnumerator Wait()

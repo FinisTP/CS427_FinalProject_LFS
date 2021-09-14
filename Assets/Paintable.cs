@@ -25,7 +25,7 @@ public class Paintable : MonoBehaviourPunCallbacks
             {
                 if (!hit.collider.CompareTag("Board") && !hit.collider.CompareTag("Brush")) return;
                 Vector3 pos = hit.point;
-                if (hit.collider.CompareTag("Board")) pos += Vector3.right * 0.5f;
+                if (hit.collider.CompareTag("Board")) pos += -Vector3.forward * 0.5f;
                 photonView.RPC("HandleDraw", RpcTarget.All, pos.x, pos.y, pos.z);
             }
         }

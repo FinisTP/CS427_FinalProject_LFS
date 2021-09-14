@@ -135,6 +135,8 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     public void FoundPlayer()
     {
         foundPlayer++;
+        if (foundPlayer == manager.playerList.Count - 1)
+        manager.WinGame();
         HiderCount.text = $"{foundPlayer}/{manager.playerList.Count - 1} players found";
     }
 
