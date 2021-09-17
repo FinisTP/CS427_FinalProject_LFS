@@ -36,6 +36,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     private bool _toggleMouse = false;
     public List<string> playerPrefabs;
     public bool _isChatting = false;
+    public bool isGameOver = false;
     
     //instance
     public static GameplayManager instance = null;
@@ -66,6 +67,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (isGameOver) return;
         if (_isChatting) return;
 
         playerListSize = playerList.Count;
@@ -128,11 +130,15 @@ public class GameplayManager : MonoBehaviourPunCallbacks
     IEnumerator WinGameCoroutine()
     {
         yield return new WaitForSeconds(5f);
+        photonView.RPC("ResetMatch", RpcTarget.MasterClient);
     }
    
-    public void WinGame()
+    public void WinGame(string msg)
     {
-        photonView.RPC("ResetMatch", RpcTarget.MasterClient);
+        isGameOver = true;
+        uiPlayer.photonView.RPC("DisplayGameOverMessage", RpcTarget.All, msg);
+        StartCoroutine(WinGameCoroutine());
+        // photonView.RPC("ResetMatch", RpcTarget.MasterClient);
     }
 
     void InitializeLocalPlayer()
@@ -165,17 +171,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         
         playerList.Clear();
 
-        GameObject[] objPlayer = GameObject.FindGameObjectsWithTag("Player");
+        ThirdPersonMovement[] objPlayer = FindObjectsOfType<ThirdPersonMovement>();
         List<ThirdPersonMovement> tpmTemp = new List<ThirdPersonMovement>();
-        foreach(GameObject tpm in objPlayer)
+        foreach(ThirdPersonMovement tpm in objPlayer)
         {
-            tpm.TryGetComponent<ThirdPersonMovement>(out ThirdPersonMovement tmpFrag);
-            if (tmpFrag != null)
-            {
-                tpmTemp.Add(tmpFrag);
-            }
-            
-            
+                tpmTemp.Add(tpm);
         }
         print("Length: " + tpmTemp.Count);
         ThirdPersonMovement[] tpms = tpmTemp.ToArray();
@@ -184,14 +184,35 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
             if (tpms[i] != null)
             {
+                int numb = tpms[i].photonPlayer.ActorNumber;
                 print(tpms[i].photonPlayer.ActorNumber);
-                tpmsSorted[tpms[i].photonPlayer.ActorNumber - 1] = tpms[i];
+                if (numb > tpms.Length)
+                {
+                    for (int j = 0; j < tpms.Length; ++j)
+                    {
+                        bool actorNumberTaken = false;
+                        for (int k = 0; k < tpms.Length; ++k)
+                        {
+                            if (tpms[k].photonPlayer.ActorNumber - 1 == j)
+                            {
+                                actorNumberTaken = true;
+                                break;
+                            }
+                        }
+                        if (actorNumberTaken) continue;
+
+                        tpmsSorted[j] = tpms[i];
+                    }
+                }
+                else tpmsSorted[tpms[i].photonPlayer.ActorNumber - 1] = tpms[i];
             }
             
         }
         playerList = new List<ThirdPersonMovement>(tpmsSorted);
         print("Player count: " + playerList.Count);
     }
+
+
 
     public void ToggleMicPlayer()
     {

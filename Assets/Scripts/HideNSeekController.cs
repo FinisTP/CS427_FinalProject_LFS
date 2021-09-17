@@ -34,6 +34,8 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     private void Start()
     {
         // A match should have at least one seeker
+        
+        if (!PhotonNetwork.IsMasterClient) return;
         int seekerId = Random.Range(0, manager.playerList.Count);
         while (manager.playerList[seekerId] == null) seekerId = Random.Range(0, manager.playerList.Count);
 
@@ -46,6 +48,7 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+        if (GameplayManager.instance.isGameOver) return;
         ThirdPersonMovement localTPM = ThirdPersonMovement.LocalPlayerInstance;
         HiderCount.text = $"{foundPlayer}/{manager.playerList.Count - 1} hiders found";
         switch (matchPhase)
@@ -85,14 +88,14 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
 
     private IEnumerator HidePhase()
     {
-        matchPhase = MatchPhase.HIDE;
+        
         Command.text = "Hide Phase";
         currentTime = 0;
         while (currentTime < hideTime)
         {
             currentTime += 1f;
             NetworkHelper.SetRoomProperty("Time", currentTime);
-            photonView.RPC("UpdateTimer", RpcTarget.Others, currentTime);
+            photonView.RPC("UpdateTimer", RpcTarget.All, currentTime);
             yield return new WaitForSeconds(1f);
         }
         photonView.RPC("ChangeMatchPhaseToSeek", RpcTarget.All);
@@ -103,6 +106,7 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     [PunRPC]
     void ChangeMatchPhaseToSeek()
     {
+        matchPhase = MatchPhase.SEEK;
         foreach (ThirdPersonMovement tpm in manager.playerList)
         {
             tpm.playerNickName.text = "";
@@ -118,6 +122,7 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     [PunRPC]
     void MatchInformationHideAndSeek(int seekerId)
     {
+        matchPhase = MatchPhase.HIDE;
         manager.playerList[seekerId].currentRole = Role.SEEKER;
         manager.playerList[seekerId].GrantSeekerBuff();
         manager.playerList[seekerId].transform.position = startPosSeeker.position;
@@ -136,8 +141,17 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
     {
         foundPlayer++;
         if (foundPlayer == manager.playerList.Count - 1)
-        manager.WinGame();
+        manager.WinGame("Seeker wins! All hiders have been found!");
         HiderCount.text = $"{foundPlayer}/{manager.playerList.Count - 1} players found";
+    }
+
+    [PunRPC]
+    void OpenGate()
+    {
+        foreach (GameObject go in blockades)
+        {
+            go.SetActive(false);
+        }
     }
 
     private IEnumerator SeekPhase()
@@ -145,10 +159,7 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
         matchPhase = MatchPhase.SEEK;
         Command.text = "Seek Phase";
         currentTime = 0;
-        foreach(GameObject go in blockades)
-        {
-            go.SetActive(false);
-        }
+        photonView.RPC("OpenGate", RpcTarget.All);
         while (currentTime < seekTime)
         {
             currentTime += 1f;
@@ -156,6 +167,6 @@ public class HideNSeekController : MonoBehaviourPunCallbacks
             photonView.RPC("UpdateTimer", RpcTarget.Others, currentTime);
             yield return new WaitForSeconds(1f);
         }
-        manager.WinGame();
+        manager.WinGame("Time's up! Hiders won!");
     }
 }

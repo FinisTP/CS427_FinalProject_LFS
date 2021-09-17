@@ -77,6 +77,12 @@ MonoBehaviour:
   - MatchInformationHideAndSeek
   - ActivateGenerator
   - FoundPlayer
+  - AddBullet
+  - MorphRPC
+  - OpenGate
+  - CommenceMatch
+  - DisplayGameOverMessage
+  - UpdatePlayerList
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -54,6 +54,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (!photonView.IsMine) return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             photonView.RPC("ToggleShareVideo", RpcTarget.All);
@@ -66,6 +67,16 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         if (videoObject != null)
         {
             videoObject.SetActive(!videoObject.activeInHierarchy);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (mRtcEngine != null)
+        {
+            mRtcEngine.LeaveChannel();
+            mRtcEngine = null;
+            IRtcEngine.Destroy();
         }
     }
 

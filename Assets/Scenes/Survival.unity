@@ -819,6 +819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 595506028}
   interactionText: Recharge
@@ -1064,6 +1065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 899770134}
   interactionText: Recharge
@@ -1222,6 +1224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 948338759}
   interactionText: Recharge
@@ -2072,6 +2075,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 1310951108}
   interactionText: Recharge
@@ -6605,6 +6609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 555834381}
   interactionText: Recharge
@@ -8306,6 +8311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 1634274555}
   interactionText: Recharge
@@ -10149,6 +10155,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 733767439, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
+      propertyPath: m_Radius
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1864085749538568342, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: sceneViewId
       value: 31
@@ -10243,7 +10253,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 124.2
+      value: 121.4
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10251,7 +10261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15
+      value: 91.5
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11349,6 +11359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: 
   itemType: 0
   controlledLight: {fileID: 1919637287}
   interactionText: Recharge
@@ -31556,6 +31567,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 733767439, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
+      propertyPath: m_Radius
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1864085749538568342, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: sceneViewId
       value: 30
@@ -31650,7 +31665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 71.7
+      value: 31.9
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.y
@@ -31658,7 +31673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -114.2
+      value: -64.3
       objectReference: {fileID: 0}
     - target: {fileID: 9053826473675658669, guid: 56cc5f1f889394b478174a73a9891949, type: 3}
       propertyPath: m_LocalRotation.w

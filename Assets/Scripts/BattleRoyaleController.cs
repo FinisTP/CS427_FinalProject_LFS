@@ -26,10 +26,28 @@ public class BattleRoyaleController : MonoBehaviourPunCallbacks
         // manager.startPosition = startPosHider;
         manager.defeatedRoom = defeatedPosition;
         currentTime = 0;
+        currentPlayerCount = 0;
     }
 
-    private void Start()
+    private void Update()
     {
+        if (GameplayManager.instance.isGameOver) return;
+        float hp = ThirdPersonMovement.LocalPlayerInstance.health;
+        float maxHp = ThirdPersonMovement.LocalPlayerInstance.maxHealth;
+        Vector3 scale = healthBar.GetComponent<RectTransform>().localScale;
+        scale.x = hp / maxHp;
+        healthBar.GetComponent<RectTransform>().localScale = scale;
+        SetBullet(1);
+
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (currentPlayerCount == PhotonNetwork.PlayerList.Length - 1) GameplayManager.instance.WinGame("Game over! Only 1 player remains!");
+    }
+
+    [PunRPC]
+    void CommenceMatch()
+    {
+        bulletCount.text = "x0";
+        playerCount.text = $"0/{PhotonNetwork.PlayerList.Length} players taken down";
         ThirdPersonMovement.LocalPlayerInstance.transform.position = startPositions[0].position;
         for (int i = 0; i < manager.playerList.Count; ++i)
         {
@@ -37,5 +55,25 @@ public class BattleRoyaleController : MonoBehaviourPunCallbacks
             if (manager.playerList[i] == null) continue;
             manager.playerList[i].gameObject.transform.position = startPositions[i].position;
         }
+
+        ModalWindowPanel.Instance.ShowModal("Battle Royale game", null, "Welcome to the Battle Royale! Draw bullets from the crystal " +
+            "and shoot down all of the remaining players before the force field closes up!", "Okay");
+    }
+
+    public void SetBullet(int amount)
+    {
+        bulletCount.text = "x" + ThirdPersonMovement.LocalPlayerInstance.bulletCount;
+    }
+
+    public void KillPlayer()
+    {
+        currentPlayerCount++;
+        playerCount.text = $"{currentPlayerCount}/{PhotonNetwork.PlayerList.Length} players taken down";
+    }
+
+    private void Start()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+        photonView.RPC("CommenceMatch", RpcTarget.All);
     }
 }

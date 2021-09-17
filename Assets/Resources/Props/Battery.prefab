@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8905b7db24fdece4ea5459a7abc4eb4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemName: Battery
   itemType: 1
   controlledLight: {fileID: 0}
   interactionText: Collect

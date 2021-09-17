@@ -44,6 +44,7 @@ public class ChatManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        GameplayManager.instance._isChatting = chatBox.isFocused;
         if (Input.GetKeyDown(KeyCode.T) && !chatBox.isFocused)
         {
             _chatEnabled = !_chatEnabled;
@@ -127,13 +128,13 @@ public class ChatManager : MonoBehaviourPunCallbacks
     public void EnableChat()
     {
         chatCanvas.SetActive(true);
-        GameplayManager.instance._isChatting = true;
+        // GameplayManager.instance._isChatting = true;
     }
 
     public void DisableChat()
     {
         chatCanvas.SetActive(false);
-        GameplayManager.instance._isChatting = false;
+        // GameplayManager.instance._isChatting = false;
     }
 
     Color MessageTypeColor(Message.MessageType messageType)

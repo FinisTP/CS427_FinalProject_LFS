@@ -32,12 +32,7 @@ public class MatchController : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        for (int i = 0; i < GameplayManager.instance.playerList.Count; ++i)
-        {
-            if (GameplayManager.instance.playerList[i] == null) continue;
-            GameplayManager.instance.playerList[i].gameObject.transform.position
-                = startPos.position;
-        }
+        
     }
 
     private void Start()
@@ -48,6 +43,23 @@ public class MatchController : MonoBehaviourPunCallbacks
         generatorCount.text = $"{currentGeneratorCount}/{generators.Length} generators activated.";
         _energy = maxEnergy;
         SetBatteryCount(0);
+
+        for (int i = 0; i < GameplayManager.instance.playerList.Count; ++i)
+        {
+            if (GameplayManager.instance.playerList[i] == null) continue;
+            GameplayManager.instance.playerList[i].gameObject.transform.position
+                = startPos.position;
+        }
+
+        ModalWindowPanel.Instance.ShowModal("Survival game", null, "Welcome to the survival game! Collect the batteries and " +
+            "recharge all of the generators before the energy bar runs out. Beware of the monsters also!", "Okay");
+    }
+
+    [PunRPC]
+    void CommenceMatch()
+    {
+        ModalWindowPanel.Instance.ShowModal("Survival game", null, "Welcome to the survival game! Collect the batteries and " +
+            "recharge all of the generators before the energy bar runs out. Beware of the monsters also!", "Okay");
     }
 
     public void SetBatteryCount(int count)
@@ -59,6 +71,7 @@ public class MatchController : MonoBehaviourPunCallbacks
     void SetEnergy(float amount)
     {
         _energy = Mathf.Clamp(amount, 0, maxEnergy);
+        if (_energy <= 0) GameplayManager.instance.isGameOver = true;
         Vector3 scale = EnergyBar.GetComponent<RectTransform>().localScale;
         scale.x = _energy / maxEnergy;
         EnergyBar.GetComponent<RectTransform>().localScale = scale;
@@ -73,6 +86,7 @@ public class MatchController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (GameplayManager.instance.isGameOver) return;
         if (!PhotonNetwork.IsMasterClient) return;
         if (isGameOver) return;
         _energy -= 1f * Time.deltaTime;
@@ -80,7 +94,7 @@ public class MatchController : MonoBehaviourPunCallbacks
         if (_energy <= 0)
         {
             isGameOver = true;
-            GameplayManager.instance.WinGame();
+            GameplayManager.instance.WinGame("The players have been defeated! Power's out permanently!");
         }
         photonView.RPC("SetEnergy", RpcTarget.All, _energy);
     }
@@ -92,6 +106,6 @@ public class MatchController : MonoBehaviourPunCallbacks
             if (!inter.isActivated) return;
         }
         isGameOver = true;
-        GameplayManager.instance.WinGame();
+        GameplayManager.instance.WinGame("Players won! The office has been lit up completely!");
     }
 }

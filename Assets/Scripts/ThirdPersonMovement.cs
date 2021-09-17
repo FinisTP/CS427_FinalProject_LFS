@@ -99,6 +99,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     public int toolCount = 0;
     public int bulletCount = 0;
+    private bool _isInvisible = false;
 
     [HideInInspector]
     public int id;
@@ -121,7 +122,10 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsMasterClient) isMasterClient = true;
         }
 
+        
         else isMasterClient = false;
+
+
         ModalWindowPanel.Instance.ShowModal("Welcome to the game", null, $"{photonPlayer.NickName} has joined the game!", "Okay");
     }
 
@@ -139,7 +143,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         GameplayManager.instance.soundPlayer.Play3DSound("Laser", transform.position, 0.1f, 3f);
         GameObject bullet = Instantiate(Resources.Load("PlayerBullet") as GameObject, shootBarrel.position, Quaternion.identity);
         bullet.transform.LookAt(new Vector3(x, y, z));
-
+        bulletCount--;
         bullet.name = photonPlayer.NickName;
         bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * 200f, ForceMode.Impulse);
         bullet.GetComponent<ProjectileBehavior>().owner = this;
@@ -149,13 +153,27 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     void AddHealth(float amount)
     {
-        _health = Mathf.Clamp(_health + amount, 0, maxHealth);
+        if (_isInvisible) return;
+        if (_health + amount <= 0)
+        {
+            FindObjectOfType<BattleRoyaleController>().KillPlayer();
+            SetDefeated(500f);
+        }
+        _health = Mathf.Clamp(_health + amount, -1f, maxHealth);
+        StartCoroutine(Invisible());
+    }
+
+    [PunRPC]
+    void AddBullet(int amount)
+    {
+        bulletCount += amount;
     }
 
     private void Start()
     {
         flashlight.SetActive(false);
-
+        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().AmplificationFactor = 5;
+        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().BoostValue = 3;
         if (photonPlayer == null || !photonPlayer.IsLocal) return;
 
         currentLook.transform.position = head.transform.position;
@@ -173,7 +191,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
         _defaultHeight = controller.height;
         _defaultCenter = controller.center.y;
-
+        _health = maxHealth;
         _shootTime = 0f;
         _currentSpeed = normalSpeed;
         currentRole = Role.SPECTATOR;
@@ -182,7 +200,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private void Update()
     {
         // if (currentRole == Role.SEEKER && GameplayManager.instance.matchPhase == MatchPhase.HIDE) return;
-
+        if (GameplayManager.instance.isGameOver) return;
         if (GameplayManager.instance._isChatting) return;
 
         if (photonPlayer == null || !photonPlayer.IsLocal) return;
@@ -191,6 +209,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         {
             photonView.RPC("ToggleLight", RpcTarget.All);
         }
+        // if (morphObject != null) morphObject.transform.position = feet.position;
 
         HandleNametag();
         HandleSprint();
@@ -204,22 +223,45 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         controller.Move((_moveDirection.normalized * _currentSpeed * SpeedMult + _velocityY * JumpMult * Vector3.up) * Time.deltaTime);
     }
 
-    public void Morph(GameObject obj)
+    public void Morph(string name, GameObject morphObj)
+    {
+        photonView.RPC("MorphRPC", RpcTarget.All, name, morphObj.transform.position.y);
+    }
+
+    [PunRPC]
+    public void MorphRPC(string objName, float y)
     {
         if (morphObject != null)
         {
-            Destroy(morphObject);
+            PhotonNetwork.Destroy(morphObject);
             morphObject = null;
         }
-        morphObject = Instantiate(obj, transform.position, transform.rotation);
+        morphObject = PhotonNetwork.Instantiate("Props\\" + "Prop_" + objName, transform.position, transform.rotation);
+        morphObject.transform.position = new Vector3(feet.position.x, y, feet.position.z);
         morphObject.transform.SetParent(transform);
-        morphObject.transform.localPosition = new Vector3(0, 0, 0);
+        
         morphObject.transform.localRotation = Quaternion.identity;
         morphObject.transform.localScale = new Vector3(1, 1, 1); ;
         morphObject.tag = "Player";
         morphObject.layer = LayerMask.NameToLayer("Default");
         ToggleFX(false);
-        obj.GetComponent<Interactable>().enabled = false;
+        morphObject.GetComponent<Interactable>().enabled = false;
+        GFX.GetComponent<Collider>().enabled = false;
+        morphObject.GetComponent<Collider>().isTrigger = true;
+        morphObject.GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    [PunRPC]
+    void SetInvisibility()
+    {
+        StartCoroutine(Invisible());
+    }
+
+    IEnumerator Invisible()
+    {
+        _isInvisible = true;
+        yield return new WaitForSeconds(1f);
+        _isInvisible = false;
     }
 
     private void HandleNametag()
@@ -270,6 +312,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
 
     private void HandleShoot()
     {
+        if (bulletCount <= 0) return;
         if (currentRole == Role.SPECTATOR && _shootTime >= shootDelay 
             && (Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Shoot")))
         {
@@ -343,12 +386,13 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         if (currentRole == Role.HIDER)
         {
             ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the prey in this match! You have 60 seconds to find " +
-                "a place to hide before the hunter wakes up!", "Okay");
+                "a place to hide before the hunter wakes up! You can morph into object to blend in the scenery, but it is gameover if the " +
+                "hunter touches you.", "Okay");
         }
         else if (currentRole == Role.SEEKER)
         {
             ModalWindowPanel.Instance.ShowModal("Match Started!", null, "You are the hunter in this match! You can start seeking the prey " +
-                "after 60 seconds!", "Okay");
+                "after 60 seconds! They may be morphed into various objects and you can only find by touching them!", "Okay");
         }
     }
 
@@ -454,13 +498,14 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider collision)
     {
         if (currentRole == Role.SEEKER)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                ThirdPersonMovement tpm = collision.gameObject.GetComponent<ThirdPersonMovement>();
+                ThirdPersonMovement tpm = collision.gameObject.GetComponentInParent<ThirdPersonMovement>();
                 if (tpm.currentRole == Role.HIDER && !tpm.isFound)
                 {
                     //HideNSeekController controller = 
@@ -471,4 +516,5 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
             }
         }
     }
+    
 }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Photon.Pun;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviourPunCallbacks
 {
     [Header("Player List")]
     public GameObject PlayerListObj;
@@ -18,11 +19,13 @@ public class UIManager : MonoBehaviour
     [Header("Interaction")]
     public TMP_Text interactionText;
     public GameObject interactionProgress;
+    public TMP_Text gameOverText;
 
     private void Start()
     {
         PlayerListObj.SetActive(false);
         interactionText.text = "";
+        gameOverText.text = "";
         interactionProgress.SetActive(false);
     }
     public void ToggleMic(bool state)
@@ -39,6 +42,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void UpdatePlayerList()
     {
         PlayerList.text = LobbyManager.instance.playerList;
@@ -68,6 +72,12 @@ public class UIManager : MonoBehaviour
     public void UpdateInteraction(float value, float maxValue)
     {
         interactionProgress.GetComponent<Slider>().value = value / maxValue;
+    }
+
+    [PunRPC]
+    public void DisplayGameOverMessage(string msg)
+    {
+        gameOverText.text = msg;
     }
 
     public void EndInteraction()
