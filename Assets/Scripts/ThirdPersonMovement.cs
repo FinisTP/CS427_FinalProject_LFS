@@ -172,8 +172,8 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private void Start()
     {
         flashlight.SetActive(false);
-        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().AmplificationFactor = 5;
-        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().BoostValue = 3;
+        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().AmplificationFactor = 4;
+        GetComponent<Photon.Voice.Unity.UtilityScripts.MicAmplifier>().BoostValue = 2;
         if (photonPlayer == null || !photonPlayer.IsLocal) return;
 
         currentLook.transform.position = head.transform.position;
