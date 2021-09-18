@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviourPunCallbacks
 {
@@ -21,12 +22,20 @@ public class UIManager : MonoBehaviourPunCallbacks
     public GameObject interactionProgress;
     public TMP_Text gameOverText;
 
+    [Header("Pause menu")]
+    public GameObject PauseMenu;
+    private GameObject currentMenu = null;
+
+    public bool isPausing = false;
+
     private void Start()
     {
         PlayerListObj.SetActive(false);
         interactionText.text = "";
         gameOverText.text = "";
         interactionProgress.SetActive(false);
+        PauseMenu.SetActive(false);
+        isPausing = false;
     }
     public void ToggleMic(bool state)
     {
@@ -50,10 +59,44 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        if (currentMenu == null) isPausing = false;
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
         if (Input.GetKeyDown(KeyCode.F1))
         {
             PlayerListObj.SetActive(!PlayerListObj.activeInHierarchy);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentMenu == null)
+            {
+                currentMenu = PauseMenu;
+                currentMenu.SetActive(true);
+                isPausing = true;
+            }
+            else
+            {
+                DisableMenu();
+            }
+        }
+    }
+
+    public void DisableMenu()
+    {
+        currentMenu.SetActive(false);
+        isPausing = false;
+        currentMenu = null;
+    }
+
+    public void ToggleMenu(GameObject menu)
+    {
+        currentMenu.SetActive(false);
+        currentMenu = menu;
+        currentMenu.SetActive(true);
     }
 
     public void ShowInteraction(string text)
@@ -84,5 +127,23 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         interactionProgress.SetActive(false);
     }
+
+    public void LeaveCommand()
+    {
+        DisableMenu();
+        
+        PhotonNetwork.LeaveRoom();
+        // PhotonNetwork.Disconnect();  
+    }
+
+    
+
+    public void QuitGame()
+    {
+        PhotonNetwork.Disconnect();
+        Application.Quit(0);
+    }
+
+
 
 }

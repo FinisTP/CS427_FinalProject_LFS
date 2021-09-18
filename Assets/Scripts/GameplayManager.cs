@@ -53,6 +53,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         }
         else Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
+        NetworkManager.instance.DDOLS.Add(gameObject);
     }
 
     private void Start()
@@ -72,7 +73,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 
         playerListSize = playerList.Count;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             _toggleMouse = !_toggleMouse;
             if (_toggleMouse)
@@ -84,7 +85,6 @@ public class GameplayManager : MonoBehaviourPunCallbacks
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            
         }
 
         if (Input.GetKeyDown(KeyCode.M))

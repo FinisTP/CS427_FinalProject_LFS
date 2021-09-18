@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public static NetworkManager instance;
     public string roomName;
+    public List<GameObject> DDOLS;
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -17,6 +19,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         else
         {
             instance = this;
+            DDOLS.Add(gameObject);
             DontDestroyOnLoad(gameObject);
         }
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -75,17 +78,28 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        base.OnJoinedRoom();
         LobbyManager.instance.UpdateLobby();
+        base.OnJoinedRoom();
     }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        LobbyManager.instance.UpdateLobby();
+        base.OnPlayerLeftRoom(otherPlayer);
+    }
+
+
 
     public override void OnLeftRoom()
     {
+        foreach (GameObject go in DDOLS)
+        {
+            Destroy(go);
+        }
+        DDOLS.Clear();
+        SceneManager.LoadScene("NewMain");
+        Destroy(gameObject);
         base.OnLeftRoom();
-        LobbyManager.instance.UpdateLobby();
     }
-
-
-
 
 }

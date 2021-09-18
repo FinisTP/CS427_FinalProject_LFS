@@ -976,7 +976,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 5000
   field of view: 40
   orthographic: 0
@@ -1003,8 +1003,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186364276}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 18.24, z: 0.3}
+  m_LocalRotation: {x: 0.11814848, y: 0.6676739, z: -0.10500217, w: 0.72747993}
+  m_LocalPosition: {x: -17.38244, y: 9.787237, z: -10.20917}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2974,6 +2974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: 
+  DDOLS: []
 --- !u!114 &452780348
 MonoBehaviour:
   m_ObjectHideFlags: 0

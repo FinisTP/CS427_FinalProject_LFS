@@ -107,6 +107,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        NetworkManager.instance.DDOLS.Add(gameObject);
     }
 
     [PunRPC]
@@ -201,7 +202,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     {
         // if (currentRole == Role.SEEKER && GameplayManager.instance.matchPhase == MatchPhase.HIDE) return;
         if (GameplayManager.instance.isGameOver) return;
-        if (GameplayManager.instance._isChatting) return;
+        if (GameplayManager.instance._isChatting || GameplayManager.instance.uiPlayer.isPausing) return;
 
         if (photonPlayer == null || !photonPlayer.IsLocal) return;
        
@@ -450,7 +451,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private void FixedUpdate()
     {
         if (photonPlayer == null) return;
-        if (GameplayManager.instance._isChatting) return;
+        
         _shootTime += Time.fixedDeltaTime;
         CheckGroundStatus();
         _isGrounded = controller.isGrounded;
