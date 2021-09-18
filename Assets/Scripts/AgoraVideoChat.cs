@@ -100,7 +100,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     private void OnJoinChannelSuccessHandler(string channelName, uint uid, int elapsed)
     {
         
-        if (!photonView.IsMine || !PhotonNetwork.IsMasterClient)
+        if (!photonView.IsMine)
             return;
         print("Called locally!");
         myUID = uid;
@@ -115,7 +115,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     private void OnUserJoinedHandler(uint uid, int elapsed)
     {
         // print("Called!");
-        if (!photonView.IsMine || inited)
+        if (!photonView.IsMine)
             return;
         print("Called client!");
 
@@ -201,7 +201,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         }
         if (isLocalUser == false)
         {
-            // newVideoSurface.SetForUser(unchecked((uint)uid));
+            newVideoSurface.SetForUser(unchecked((uint)uid));
         }
         newVideoSurface.SetEnable(true);
 
