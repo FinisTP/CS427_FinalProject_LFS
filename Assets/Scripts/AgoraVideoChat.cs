@@ -105,9 +105,9 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         print("Called locally!");
         myUID = uid;
         Debug.LogFormat("I: {0} joined channel: {1}.", uid.ToString(), channelName);
-        photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, true);
-        photonView.RPC("SetInited", RpcTarget.AllBuffered);
-        // CreateUserVideoSurface(uid, true);
+        // photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, true);
+        // photonView.RPC("SetInited", RpcTarget.AllBuffered);
+        CreateUserVideoSurface((int)uid, true);
         // inited = true;
     }
 
@@ -122,9 +122,9 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         // GameObject go = GameObject.Find(uid.ToString());
         // if (go != null) return;
         
-        photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, false);
-        photonView.RPC("SetInited", RpcTarget.AllBuffered);
-        // CreateUserVideoSurface(uid, false);
+        // photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, false);
+        // photonView.RPC("SetInited", RpcTarget.AllBuffered);
+        CreateUserVideoSurface((int)uid, false);
         // inited = true;
     }
 
