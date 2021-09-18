@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleRoyale.unity
     guid: 4f78f088656479347b4dd5ec6e2248e0
+  - enabled: 1
+    path: Assets/Scenes/Instructions.unity
+    guid: 6b44c53721601044bb09e2c8b703112f
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 8b6ebf74f9f915f41b54afcdbc5dd42c
   m_configObjects: {}

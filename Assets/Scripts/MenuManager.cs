@@ -6,11 +6,14 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviourPunCallbacks
 {
 
     [Header("Menus")]
+    public GameObject settingsMenu;
+    public GameObject instructionsMenu;
     public GameObject currentMenu;
     public GameObject mainMenu;
     public GameObject lobbyMenu;
@@ -23,21 +26,31 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        createRoomBtn.interactable = false;
-        joinRoomBtn.interactable = false;
-        
+        if (createRoomBtn != null && joinRoomBtn != null)
+        {
+            createRoomBtn.interactable = false;
+            joinRoomBtn.interactable = false;
+        } 
     }
 
     private void Update()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
     }
+
+    public void LoadScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
     public override void OnConnectedToMaster()
     {
-        createRoomBtn.interactable = true;
-        joinRoomBtn.interactable = true;
+        if (createRoomBtn != null && joinRoomBtn != null)
+        {
+            createRoomBtn.interactable = true;
+            joinRoomBtn.interactable = true;
+        }
     }
     public void SetMenu(GameObject menu)
     {

@@ -6,7 +6,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
 using UnityStandardAssets.CrossPlatformInput;
-public class PlayerController : MonoBehaviourPunCallbacks
+public class ExPlayerController : MonoBehaviourPunCallbacks
 {
     [Header("Player Specs")]
     [SerializeField] GameObject cameraHolder;

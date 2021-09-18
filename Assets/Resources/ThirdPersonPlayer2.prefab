@@ -709,6 +709,8 @@ MonoBehaviour:
   crouchSpeed: 3
   jumpSpeed: 10
   shootDelay: 0.5
+  _isCrouching: 0
+  _isSprinting: 0
   isFound: 0
   feet: {fileID: 4966560181339551599}
   waist: {fileID: 4955559758592587854}
@@ -852,7 +854,7 @@ AudioSource:
   m_GameObject: {fileID: 4966560181096501134}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: b6c82b8b33bc7b542b802979f809c38f, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -1031,6 +1033,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   channel: unity3d
+  myUID: 0
+  videoObject: {fileID: 0}
   spawnPoint: {fileID: 941253243228329197}
   spaceBetweenUserVideos: 150
   userVideoPrefab: {fileID: 622384456809661096, guid: 045792ac1e564ba46a047f4d783c685d, type: 3}

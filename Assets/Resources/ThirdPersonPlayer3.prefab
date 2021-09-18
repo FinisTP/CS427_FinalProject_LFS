@@ -728,7 +728,7 @@ AudioSource:
   m_GameObject: {fileID: 5150045516243673528}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: b6c82b8b33bc7b542b802979f809c38f, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -908,6 +908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   channel: unity3d
   myUID: 0
+  videoObject: {fileID: 0}
   spawnPoint: {fileID: 6330900755606579312}
   spaceBetweenUserVideos: 150
   userVideoPrefab: {fileID: 622384456809661096, guid: 045792ac1e564ba46a047f4d783c685d, type: 3}
