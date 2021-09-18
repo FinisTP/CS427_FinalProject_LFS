@@ -583,6 +583,8 @@ MonoBehaviour:
   crouchSpeed: 3
   jumpSpeed: 10
   shootDelay: 0.5
+  _isCrouching: 0
+  _isSprinting: 0
   isFound: 0
   feet: {fileID: 5150045514909129049}
   waist: {fileID: 7013612769320945577}
@@ -905,6 +907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   channel: unity3d
+  myUID: 0
   spawnPoint: {fileID: 6330900755606579312}
   spaceBetweenUserVideos: 150
   userVideoPrefab: {fileID: 622384456809661096, guid: 045792ac1e564ba46a047f4d783c685d, type: 3}

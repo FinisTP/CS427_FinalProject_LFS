@@ -84,6 +84,7 @@ MonoBehaviour:
   - DisplayGameOverMessage
   - UpdatePlayerList
   - SetInvisibility
+  - SetInited
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
