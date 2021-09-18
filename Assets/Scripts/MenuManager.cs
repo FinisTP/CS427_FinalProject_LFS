@@ -25,8 +25,14 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         createRoomBtn.interactable = false;
         joinRoomBtn.interactable = false;
+        
+    }
+
+    private void Update()
+    {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
     }
     public override void OnConnectedToMaster()
     {

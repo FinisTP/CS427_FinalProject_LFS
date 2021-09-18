@@ -50,7 +50,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         mRtcEngine.EnableVideo();
         mRtcEngine.EnableVideoObserver();
         mRtcEngine.JoinChannel(channel, null, 0);
-        // print("Done");
+        print("Initialized");
         
     }
 
@@ -95,9 +95,10 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     // Local Client Joins Channel.
     private void OnJoinChannelSuccessHandler(string channelName, uint uid, int elapsed)
     {
-        print("Called!");
-        if (!photonView.IsMine || inited)
+        
+        if (!photonView.IsMine || !PhotonNetwork.IsMasterClient)
             return;
+        print("Called locally!");
         myUID = uid;
         Debug.LogFormat("I: {0} joined channel: {1}.", uid.ToString(), channelName);
         photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, true);
@@ -109,11 +110,12 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     private void OnUserJoinedHandler(uint uid, int elapsed)
     {
         // print("Called!");
-        if (!photonView.IsMine || inited)
+        if (!photonView.IsMine)
             return;
+        print("Called client!");
 
-        GameObject go = GameObject.Find(uid.ToString());
-        if (go != null) return;
+        // GameObject go = GameObject.Find(uid.ToString());
+        // if (go != null) return;
 
         photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, false);
         //CreateUserVideoSurface((int)uid, false);

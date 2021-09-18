@@ -14,14 +14,14 @@ public class ProjectileBehavior : MonoBehaviour
                 // TODO: found a hider!!
                 other.GetComponentInParent<ThirdPersonMovement>().photonView.RPC("AddHealth", Photon.Pun.RpcTarget.All, -50f);
                 GameplayManager.instance.photonView.RPC("PlayEffectCommand", Photon.Pun.RpcTarget.All, "Smoke", transform.position);
-                Destroy(gameObject);
+                // Destroy(gameObject);
                 print("Found yer!!");
             }
         }
         else if (other.CompareTag("Obstacle"))
         {
             GameplayManager.instance.photonView.RPC("PlayEffectCommand", Photon.Pun.RpcTarget.All, "Smoke", transform.position);
-            Destroy(gameObject);
+            // Destroy(gameObject);
         }
         
     }
@@ -30,7 +30,7 @@ public class ProjectileBehavior : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Destroy(gameObject);
+            // Destroy(gameObject);
         }
     }
 }

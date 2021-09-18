@@ -32,7 +32,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     private float _turnSmoothVelocity;
     private Vector3 _moveDirection;
     private float _velocityY;
-    private bool _isCrouching = false;
+    [SerializeField]  private bool _isCrouching = false;
     private float _shootTime;
 
     // Ground checking
@@ -44,7 +44,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     // For animation
     private bool _isJumping = false;
     private float _forwardAmount;
-    private bool _isSprinting = false;
+    [SerializeField] private bool _isSprinting = false;
     public bool isFound = false;
 
     [Header("Associated Components")]
@@ -216,6 +216,13 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
         HandleCrouch();
         HandleShoot();
         HandleViewMode();
+
+        if (_isCrouching && _isSprinting)
+        {
+            _isCrouching = false;
+            _isSprinting = false;
+            _currentSpeed = normalSpeed;
+        }
 
         Move();
         Jump();
@@ -503,6 +510,7 @@ public class ThirdPersonMovement : MonoBehaviourPunCallbacks
     {
         if (currentRole == Role.SEEKER)
         {
+            if (FindObjectOfType<HideNSeekController>().matchPhase != MatchPhase.SEEK) return;
             if (collision.gameObject.CompareTag("Player"))
             {
                 ThirdPersonMovement tpm = collision.gameObject.GetComponentInParent<ThirdPersonMovement>();
