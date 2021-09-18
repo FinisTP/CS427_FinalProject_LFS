@@ -14,7 +14,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     private string originalChannel;
     private IRtcEngine mRtcEngine = null;
     [SerializeField] private uint myUID = 0;
-    private GameObject videoObject;
+    public GameObject videoObject;
     private bool inited = false;
 
     // [SerializeField]
@@ -107,7 +107,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         Debug.LogFormat("I: {0} joined channel: {1}.", uid.ToString(), channelName);
         // photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, true);
         // photonView.RPC("SetInited", RpcTarget.AllBuffered);
-        CreateUserVideoSurface((int)uid, true);
+        CreateUserVideoSurface(uid, true);
         // inited = true;
     }
 
@@ -124,7 +124,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         
         // photonView.RPC("CreateUserVideoSurface", RpcTarget.AllBuffered, (int)uid, false);
         // photonView.RPC("SetInited", RpcTarget.AllBuffered);
-        CreateUserVideoSurface((int)uid, false);
+        CreateUserVideoSurface(uid, false);
         // inited = true;
     }
 
@@ -160,7 +160,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
 
     private int Offset = 100;
     [PunRPC]
-    public void CreateUserVideoSurface(int uid, bool isLocalUser)
+    public void CreateUserVideoSurface(uint uid, bool isLocalUser)
     {
         myUID = unchecked((uint)uid);
         print(gameObject.name + " - ID: " + uid.ToString());
@@ -176,9 +176,30 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         // float spawnY = playerVideoList.Count * spaceBetweenUserVideos;
         // Vector3 spawnPosition = new Vector3(0, -spawnY, 0);
         // Create Gameobject holding video surface and update properties
-        // if (videoObject != null) return;
+        if (videoObject != null)
+        {
+            AgoraVideoChat[] instances = FindObjectsOfType<AgoraVideoChat>();
+            foreach (AgoraVideoChat avc in instances)
+            {
+                if (avc.videoObject == null)
+                {
+                    avc.SpawnFace(uid, isLocalUser);
+                }
+            }
+            return;
+        }
+        SpawnFace(uid, isLocalUser);
+       
+        // inited = true;
+        // Update our "Content" container that holds all the image planes
+        // content.sizeDelta = new Vector2(0, playerVideoList.Count * spaceBetweenUserVideos + 140);
+        // UpdatePlayerVideoPostions();
+    }
+
+    public void SpawnFace(uint uid, bool isLocalUser)
+    {
         videoObject = Instantiate(userVideoPrefab, spawnPoint.position, spawnPoint.rotation);
-        
+
         if (videoObject == null)
         {
             Debug.LogError("CreateUserVideoSurface() - newUserVideoIsNull");
@@ -194,24 +215,19 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
         playerVideoList.Add(videoObject);
         // Update our VideoSurface to reflect new users
         VideoSurface newVideoSurface = videoObject.GetComponent<VideoSurface>();
-        
+
         if (newVideoSurface == null)
         {
             Debug.LogError("CreateUserVideoSurface() - VideoSurface component is null on newly joined user");
         }
         if (isLocalUser == false)
         {
-            newVideoSurface.SetForUser(unchecked((uint)uid));
+            newVideoSurface.SetForUser(uid);
         }
         newVideoSurface.SetEnable(true);
 
         newVideoSurface.SetGameFps(30);
         videoObject.SetActive(false);
-
-        // inited = true;
-        // Update our "Content" container that holds all the image planes
-        // content.sizeDelta = new Vector2(0, playerVideoList.Count * spaceBetweenUserVideos + 140);
-        // UpdatePlayerVideoPostions();
     }
 
     private void UpdatePlayerVideoPostions()
