@@ -110,7 +110,7 @@ public class AgoraVideoChat : MonoBehaviourPunCallbacks
     private void OnUserJoinedHandler(uint uid, int elapsed)
     {
         // print("Called!");
-        if (!photonView.IsMine)
+        if (!PhotonNetwork.IsMasterClient)
             return;
         print("Called client!");
 
