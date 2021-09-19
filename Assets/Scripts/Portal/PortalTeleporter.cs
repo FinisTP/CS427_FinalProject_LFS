@@ -11,7 +11,7 @@ public class PortalTeleporter : MonoBehaviour
 
     private void Start()
     {
-		player = ThirdPersonMovement.LocalPlayerInstance.transform;
+		// player = ThirdPersonMovement.LocalPlayerInstance.transform;
     }
 
     // Update is called once per frame
@@ -28,7 +28,13 @@ public class PortalTeleporter : MonoBehaviour
 	{
 		if (other.tag == "Player")
 		{
-			playerIsOverlapping = true;
+			ThirdPersonMovement tpm = other.GetComponentInParent<ThirdPersonMovement>();
+			if (tpm != null)
+            {
+				player = tpm.transform;
+				playerIsOverlapping = true;
+			}
+			
 		}
 	}
 
@@ -36,7 +42,13 @@ public class PortalTeleporter : MonoBehaviour
 	{
 		if (other.tag == "Player")
 		{
-			playerIsOverlapping = false;
+			ThirdPersonMovement tpm = other.GetComponentInParent<ThirdPersonMovement>();
+			if (tpm != null)
+			{
+				player = null;
+				playerIsOverlapping = false;
+			}
+			
 		}
 	}
 }

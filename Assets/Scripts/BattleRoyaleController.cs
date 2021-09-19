@@ -40,7 +40,7 @@ public class BattleRoyaleController : MonoBehaviourPunCallbacks
         SetBullet(1);
 
         if (!PhotonNetwork.IsMasterClient) return;
-        // if (currentPlayerCount == PhotonNetwork.PlayerList.Length - 1) GameplayManager.instance.WinGame("Game over! Only 1 player remains!");
+        if (currentPlayerCount == PhotonNetwork.PlayerList.Length - 1) GameplayManager.instance.WinGame("Game over! Only 1 player remains!");
     }
 
     [PunRPC]

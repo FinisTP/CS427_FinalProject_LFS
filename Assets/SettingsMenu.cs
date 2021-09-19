@@ -38,7 +38,7 @@ public class SettingsMenu : MonoBehaviour
 
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.RefreshShownValue();
-        LoadSettings(currentResolutionIndex);
+        // LoadSettings(currentResolutionIndex);
     }
 
     public void SetVolume(float volume)
