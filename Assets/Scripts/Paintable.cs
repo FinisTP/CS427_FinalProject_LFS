@@ -21,6 +21,7 @@ public class Paintable : MonoBehaviourPunCallbacks
     {
         if (Input.GetMouseButton(0))
         {
+            if (Camera.main == null) return;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, float.MaxValue, (~(1 << brushLayer)) | (~(1 << boardLayer)) ))

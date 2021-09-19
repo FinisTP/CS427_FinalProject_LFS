@@ -125,6 +125,7 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     public void EndInteraction()
     {
+        if (interactionProgress == null) return;
         interactionProgress.SetActive(false);
     }
 
