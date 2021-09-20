@@ -52,3 +52,10 @@ Unity 2020 LTS version 2020.3.10f1
 | Volleyball | Scorpion Studio | https://www.turbosquid.com/3d-models/volley-ball-volleyball-max-free/763175 |
 | Awning 3D model | Marc Mons | https://www.turbosquid.com/3d-models/awning-tent-3d-model-1205065 |
 | Slide | Hend_Z | https://www.turbosquid.com/3d-models/free-obj-model-slide/954510 |
+| Monstera potted home flower Free 3D model | zadira3d | https://www.cgtrader.com/free-3d-models/plant/pot-plant/monstera-potted-home-flower |
+| boxwood plant Free 3D model | dolar | https://www.cgtrader.com/free-3d-models/plant/pot-plant/boxwood-plant |
+| Medieval Door | Stumboy | https://www.turbosquid.com/3d-models/3ds-medieval-door/1126894 | 
+| 3D Middle Table | yasomania34 | https://www.turbosquid.com/3d-models/3d-table-1637017 | 
+| 3D round table model | w1050263 | https://www.turbosquid.com/3d-models/3d-furniture-chair-table-model-1511928 |
+| Rusty Metal Table Chairs and Bench 3D model | nestofgames | https://www.turbosquid.com/3d-models/rusty-metal-table-chairs-3d-model-1511127 | 
+| 3D Single Bed model | SPACESCAN | https://www.turbosquid.com/3d-models/3d-single-bed-model-1657392 |
