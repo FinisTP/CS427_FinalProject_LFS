@@ -44,3 +44,11 @@ Unity 2020 LTS version 2020.3.10f1
 | Floating Platform                           | Escoly          | https://sketchfab.com/3d-models/floating-platform-d3438f2f6626428e91707e815eb89357                                    |
 | Skybox Series Free                          | Avionx          | https://assetstore.unity.com/packages/2d/textures-materials/sky/skybox-series-free-103633                                                                             |
 | Unity Youtube Player                        | iBicha          | https://github.com/iBicha/UnityYoutubePlayer               |
+| Free Fire Hydrant | Rakshi Games | https://www.turbosquid.com/3d-models/free-hydrant-3d-model/983947 |
+| Fire Extinguisher CO2 | theflyingtim | https://www.turbosquid.com/3d-models/free-obj-mode-co2-extinguisher/1109715 |
+| Fire Axe 3D model |  sepandj | https://www.turbosquid.com/3d-models/axe-weapon-tool-3d-model-1479864 |
+| Trash Container Gameready 3D model | zavorad | https://www.turbosquid.com/3d-models/trash-container-3d-model-1652950 |
+| Swing Top Trash Can | 3DReady | https://www.turbosquid.com/3d-models/free-max-model-swing-trash/801787 |
+| Volleyball | Scorpion Studio | https://www.turbosquid.com/3d-models/volley-ball-volleyball-max-free/763175 |
+| Awning 3D model | Marc Mons | https://www.turbosquid.com/3d-models/awning-tent-3d-model-1205065 |
+| Slide | Hend_Z | https://www.turbosquid.com/3d-models/free-obj-model-slide/954510 |
