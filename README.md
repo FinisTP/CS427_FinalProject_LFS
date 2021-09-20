@@ -11,9 +11,10 @@ CS427 - Game Development and 3D Visualization - Final Project by group 02
 
 ### Introduction
 The Covid-19 pandemic has taken a toll on all global citizens, forcing us to work from home and depriving us of all social interactions with one another. In this context, the game industry benefits a lot from creating games that empower peer-to-peer connection during lockdown. A famous example includes VR Chat (PC-friendly), which connects various people from around the globe and enables them to chat and play together. Similarly, “Play together” is a more lightweight instance that has gained popularity among Vietnamese people in recent months. The game is mainly aimed at group meetings and entertainment, and everyone can have fun altogether in a virtual world.
+
 These games attracted many youngsters due to their playful and flashy nature. We want to create a similar experience, with senior audience in mind also. Since older people also have social groups to attend to, but they would not spend enough time to play video games. As such, to equally supports these two groups of people, we created another instance of “Play together” or “VR Chat”, where people can create private rooms, meetings and let the seniors chill out, or participate in fast-paced games to warm up with friends.
+
 We took a good look at VRChat and Play Together and see that they have already done a good job at providing different P2P interactions. They have a metaverse where people all around the world can gather at the same place, and also throw parties, go on virtual trips, customize their characters so that they fit your personalities and unique styles,... Among these wonderful features, we only intend to extract a small part of their ideas, which is to create an environment where people can chill out together instead of just playing, and on top of that we want to add in even more communication and cooperating methods.
-The game is developed for 3 platforms containing Windows, IOS, and Android. For Android, you will need api level at least 21 to run the game. For IOS, we require version 7.0 or higher.
 
 ### Unity version
 Unity 2020 LTS version 2020.3.10f1
