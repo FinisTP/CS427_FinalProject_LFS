@@ -21,8 +21,8 @@ Unity 2020 LTS version 2020.3.10f1
 ### Resources reference
 | Package name                                | Author          | Link                                                                                                                        |
 |---------------------------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Counter-Strike Italy - classic CS map in 3D | vrchris         | Counter-Strike Italy - classic CS map in 3D - Download Free 3D model by vrchris (@vrchris) [6720676] (sketchfab.com)        |
-| UXR Spiral Stairs                           | ENEA LE FONS    | UXR Spiral Stairs - Download Free 3D model by ENEA LE FONS (@enealefons) [e80ad34] (sketchfab.com)                          |
+| Counter-Strike Italy - classic CS map in 3D | vrchris         | https://sketchfab.com/3d-models/counter-strike-italy-classic-cs-map-in-3d-672067616f7f44a19a0322694797a632        |
+| UXR Spiral Stairs                           | ENEA LE FONS    | https://sketchfab.com/3d-models/uxr-spiral-stairs-e80ad34c81044e499eacb414b5505c84                          |
 | Day 173: Union Square Fountain              | alban           | Day 173: Union Square Fountain - Download Free 3D model by alban (@alban) [35b2e12] (sketchfab.com)                         |
 | Portal                                      | DJMaesen        | Portal - Download Free 3D model by DJMaesen (@bumstrum) [3279b8d] (sketchfab.com)                                           |
 | Energy Sphere                               | Sirhaian        | Energy Sphere - Download Free 3D model by Sirhaian (@sirhaian) [d3c2a8e] (sketchfab.com)                                    |
