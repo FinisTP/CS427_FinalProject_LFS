@@ -23,23 +23,23 @@ Unity 2020 LTS version 2020.3.10f1
 |---------------------------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Counter-Strike Italy - classic CS map in 3D | vrchris         | https://sketchfab.com/3d-models/counter-strike-italy-classic-cs-map-in-3d-672067616f7f44a19a0322694797a632        |
 | UXR Spiral Stairs                           | ENEA LE FONS    | https://sketchfab.com/3d-models/uxr-spiral-stairs-e80ad34c81044e499eacb414b5505c84                          |
-| Day 173: Union Square Fountain              | alban           | Day 173: Union Square Fountain - Download Free 3D model by alban (@alban) [35b2e12] (sketchfab.com)                         |
-| Portal                                      | DJMaesen        | Portal - Download Free 3D model by DJMaesen (@bumstrum) [3279b8d] (sketchfab.com)                                           |
-| Energy Sphere                               | Sirhaian        | Energy Sphere - Download Free 3D model by Sirhaian (@sirhaian) [d3c2a8e] (sketchfab.com)                                    |
-| Medieval Fantasy Book                       | Pixel           | Sketchfab                                                                                                                   |
-| Blood Pack                                  | eeror           | Blood Pack - Download Free 3D model by eeror (@eeror) [97cdde9] (sketchfab.com)                                             |
-| Chair, table, wardrobe, suitcase furniture  | mikurban        | Chair, table, wardrobe, suitcase furniture - Download Free 3D model by mikurban (@mikurban) [779508b] (sketchfab.com)       |
-| Furniture Set                               | Matt LeMoine    | Furniture Set - Download Free 3D model by Matt LeMoine (@Matt_LeMoine) [b9dc4c2] (sketchfab.com)                            |
-| PolyArt - Ancient Village Pack              | Render Island   | PolyArt - Ancient Village Pack | 3D Fantasy | Unity Asset Store                                                             |
-| Stylized Water For URP                      | Alexander Ameye | Stylized Water For URP | VFX Shaders | Unity Asset Store                                                                    |
-| Photon Engine                               | ExitGame        | Photon Unity 3D Networking Framework SDKs and Game Backend | Photon Engine                                                  |
-| Agora.io                                    | Agora           | Agora Real-Time Voice and Video Engagement                                                                                  |
-| Environment                                 | pabong          | Environment Free 3D Model - .obj .max .fbx - Free3D                                                                         |
-| Battery                                     | kenkiske        | Battery Free 3D Model - .3ds .obj .dae .blend .fbx .mtl - Free3D                                                            |
-| Sci-Fi Emergency Backup Generator           | 3dhaupt         | Sci-Fi Emergency Backup Generator Free 3D Model - .abc .3ds .x3d .x .wrl .stl .raw .ply .obj .fbx .dxf .dae .blend - Free3D |
+| Day 173: Union Square Fountain              | alban           | https://sketchfab.com/3d-models/day-173-union-square-fountain-35b2e12d30f6443ca5c151f5c104f945                         |
+| Portal                                      | DJMaesen        | https://sketchfab.com/3d-models/portal-3279b8d99fe244059c40a66e8aa39590                                           |
+| Energy Sphere                               | Sirhaian        | https://sketchfab.com/3d-models/energy-sphere-d3c2a8e291604dd4b41bdd7d295e1c90                                    |
+| Medieval Fantasy Book                       | Pixel           | https://sketchfab.com/3d-models/medieval-fantasy-book-06d5a80a04fc4c5ab552759e9a97d91a                                                                                                                   |
+| Blood Pack                                  | eeror           | https://sketchfab.com/3d-models/blood-pack-97cdde92037c4ece8a08bae4dc27526e                                             |
+| Chair, table, wardrobe, suitcase furniture  | mikurban        | https://sketchfab.com/3d-models/chair-table-wardrobe-suitcase-furniture-779508b3e7d64fe3a7eed7be5037534f       |
+| Furniture Set                               | Matt LeMoine    | https://sketchfab.com/3d-models/furniture-set-b9dc4c2e12a34a69948681bd9d74aa63                            |
+| PolyArt - Ancient Village Pack              | Render Island   | https://assetstore.unity.com/packages/3d/environments/fantasy/polyart-ancient-village-pack-166022                                                             |
+| Stylized Water For URP                      | Alexander Ameye | https://assetstore.unity.com/packages/vfx/shaders/stylized-water-for-urp-162025                                                                    |
+| Photon Engine                               | ExitGame        | https://www.photonengine.com/pun                                                 |
+| Agora.io                                    | Agora           | https://www.agora.io/en/?utm_source=google&utm_medium=cpc&utm_keyword=agora&utm_device=c&utm_campaign=brand-india&gclid=Cj0KCQjwnJaKBhDgARIsAHmvz6e3a9yXOcu0znpnQ9MDkVdkhp2e5bPllm_OC6yeBH7NGfn1j-t7w2YaAmk1EALw_wcB                                                                                  |
+| Environment                                 | pabong          | https://free3d.com/3d-model/environment-23742.html                                                                         |
+| Battery                                     | kenkiske        | https://free3d.com/3d-model/battery-90009.html                                                           |
+| Sci-Fi Emergency Backup Generator           | 3dhaupt         | https://free3d.com/3d-model/sci-fi-emergency-backup-generator-480843.html |
 | Vroid studio                                | pixiv           | https://vroid.com/en/studio                                                                                                 |
-| CS_Havana                                   | amadeus         | Cs_havana Free 3D Model - .obj - Free3D                                                                                     |
-| CS_Office                                   | amadeus         | Cs_office Free 3D Model - .obj - Free3D                                                                                     |
-| Floating Platform                           | Escoly          | Floating Platform - Download Free 3D model by Escoly (@Escoly) [d3438f2] (sketchfab.com)                                    |
-| Skybox Series Free                          | Avionx          | Skybox Series Free | 2D Sky | Unity Asset Store                                                                             |
-| Unity Youtube Player                        | iBicha          | iBicha/UnityYoutubePlayer: Play youtube videos in Unity using youtube-dl and Unity's VideoPlayer (github.com)               |
+| CS_Havana                                   | amadeus         | https://free3d.com/3d-model/cs-havana-60355.html                                                                                    |
+| CS_Office                                   | amadeus         | https://free3d.com/3d-model/cs-office-6260.html                                                                                     |
+| Floating Platform                           | Escoly          | https://sketchfab.com/3d-models/floating-platform-d3438f2f6626428e91707e815eb89357                                    |
+| Skybox Series Free                          | Avionx          | https://assetstore.unity.com/packages/2d/textures-materials/sky/skybox-series-free-103633                                                                             |
+| Unity Youtube Player                        | iBicha          | https://github.com/iBicha/UnityYoutubePlayer               |
